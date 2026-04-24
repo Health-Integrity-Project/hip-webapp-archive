@@ -52,22 +52,20 @@ npm run preview  # serves dist/ locally
 
 ### Netlify setup (one-time)
 
-1. Connect repo to Netlify via the dashboard or `netlify link`
-2. Build command: `npm run build`
-3. Publish directory: `dist`
-4. Add environment variables in Netlify → Site Settings → Environment Variables:
-   - `SUPABASE_URL`
-   - `SUPABASE_SERVICE_KEY`
+1. Netlify dashboard → **Add new site → Deploy manually** (do NOT link to GitHub)
+2. Copy the **Site ID** from Site Settings → General
 
-### GitHub secrets (for nightly CI)
+> Netlify's git integration is intentionally disabled. GitHub Actions is the sole deploy path.
 
-Add these in GitHub → repo → Settings → Secrets and variables → Actions:
+### GitHub secrets
+
+Add these in GitHub → repo → Settings → Secrets and variables → Actions → **New repository secret**:
 
 | Secret | Where to get it |
 |---|---|
 | `SUPABASE_URL` | Supabase → Project Settings → API |
 | `SUPABASE_SERVICE_KEY` | Supabase → Project Settings → API → service_role |
-| `NETLIFY_AUTH_TOKEN` | Netlify → User Settings → Personal access tokens |
+| `NETLIFY_AUTH_TOKEN` | Netlify → User Settings → Applications → Personal access tokens |
 | `NETLIFY_SITE_ID` | Netlify → Site Settings → General → Site ID |
 
 ### Nightly rebuild
