@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://archive.healthintegrityproject.org/sitemap-index.xml
