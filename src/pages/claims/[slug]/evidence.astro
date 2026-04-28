@@ -16,6 +16,13 @@ if (!claim) return Astro.redirect('/');
 const appUrl = `https://healthintegrityproject.org/claims/${slug}/evidence`;
 const buildDate = new Date().toISOString().split('T')[0];
 
+const pubCount = claim.publications.length;
+const statusText = claim.evidence_status ?? 'Reviewed';
+const descriptionBase = claim.description
+  ? claim.description.slice(0, 120)
+  : claim.title;
+const pageDescription = `${statusText}: ${descriptionBase}. Backed by ${pubCount} scientific publication${pubCount !== 1 ? 's' : ''} reviewed by health experts.`;
+
 const supporting = claim.publications.filter((p) => p.stance === 'supporting');
 const contradicting = claim.publications.filter((p) => p.stance === 'contradicting');
 const neutral = claim.publications.filter(
@@ -35,7 +42,7 @@ function evidenceBadgeClass(status: string | null): string {
 
 <Base
   title={claim.title}
-  description={`Expert evidence and scientific papers for: ${claim.title}`}
+  description={pageDescription}
   canonicalUrl={`/claims/${slug}/evidence`}
 >
   <nav class="text-sm text-gray-500 mb-6">
