@@ -2,8 +2,11 @@
 import Base from '../layouts/Base.astro';
 import { getAllClaims } from '../lib/fetchClaimEvidence';
 import type { Claim } from '../lib/types';
+import { buildOrganizationSchema, buildWebSiteSchema } from '../lib/structuredData';
 
 const claims = await getAllClaims();
+const orgSchema = buildOrganizationSchema();
+const siteSchema = buildWebSiteSchema();
 
 function getEvidenceStatusColor(status: string): string {
   const colors: Record<string, string> = {
@@ -79,6 +82,7 @@ function formatDate(iso: string): string {
   description={`Archive of ${claims.length} health claims with expert-reviewed scientific evidence. See what peer-reviewed research says about nutrition, supplements, exercise, and medical treatments.`}
   canonicalUrl="/"
   ogType="website"
+  jsonLd={[orgSchema, siteSchema]}
 >
   <h1 class="text-3xl font-bold mb-4">The Health Integrity Project</h1>
   <p class="text-muted-foreground mb-10 max-w-2xl">

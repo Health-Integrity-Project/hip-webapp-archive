@@ -1,14 +1,16 @@
 ---
 import '../styles/global.css';
+import { serializeJsonLd } from '../lib/structuredData';
 
 interface Props {
   title: string;
   description?: string;
   canonicalUrl?: string;
   ogType?: string;
+  jsonLd?: Record<string, unknown>[];
 }
 
-const { title, description, canonicalUrl, ogType = 'article' } = Astro.props;
+const { title, description, canonicalUrl, ogType = 'article', jsonLd } = Astro.props;
 const siteUrl = 'https://archive.healthintegrityproject.org';
 const appUrl = 'https://healthintegrityproject.org';
 const canonical = canonicalUrl ? `${siteUrl}${canonicalUrl}` : siteUrl;
@@ -28,6 +30,9 @@ const year = new Date().getFullYear();
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonical} />
     <meta name="robots" content="index, follow" />
+    {(jsonLd ?? []).map((schema) => (
+      <script type="application/ld+json" set:html={serializeJsonLd(schema)} />
+    ))}
   </head>
   <body class="bg-background text-foreground min-h-screen">
     <header class="sticky top-0 z-50 bg-primary/80 backdrop-blur-sm border-b border-white/10 px-6 py-3">
