@@ -1,6 +1,6 @@
 import type { Claim } from './types';
 
-const SITE_URL = 'https://archive.healthintegrityproject.org';
+const SITE_URL = 'https://open.healthintegrityproject.org';
 
 export function serializeJsonLd(schema: Record<string, unknown>): string {
   return JSON.stringify(schema).replace(/<\//g, '<\\/');

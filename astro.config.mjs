@@ -16,7 +16,7 @@ if (supabaseUrl && supabaseKey) {
   const { data } = await supabase.from('claims').select('slug, updated_at');
   if (data) {
     for (const claim of data) {
-      const url = `https://archive.healthintegrityproject.org/claims/${claim.slug}/evidence`;
+      const url = `https://open.healthintegrityproject.org/claims/${claim.slug}/evidence`;
       lastmodMap[url] = new Date(claim.updated_at);
     }
   }
@@ -42,5 +42,5 @@ export default defineConfig({
       },
     },
   },
-  site: 'https://archive.healthintegrityproject.org',
+  site: 'https://open.healthintegrityproject.org',
 });

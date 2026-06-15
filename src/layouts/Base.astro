@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { title, description, canonicalUrl, ogType = 'article', jsonLd } = Astro.props;
-const siteUrl = 'https://archive.healthintegrityproject.org';
+const siteUrl = 'https://open.healthintegrityproject.org';
 const appUrl = 'https://healthintegrityproject.org';
 const canonical = canonicalUrl ? `${siteUrl}${canonicalUrl}` : siteUrl;
 const year = new Date().getFullYear();

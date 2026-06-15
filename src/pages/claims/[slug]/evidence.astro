@@ -15,7 +15,7 @@ const claim = await getClaimEvidence(slug);
 if (!claim) return Astro.redirect('/');
 
 const appUrl = `https://healthintegrityproject.org/claims/${slug}/evidence`;
-const canonicalClaimUrl = `https://archive.healthintegrityproject.org/claims/${slug}/evidence`;
+const canonicalClaimUrl = `https://open.healthintegrityproject.org/claims/${slug}/evidence`;
 const claimReviewSchema = buildClaimReviewSchema(claim, canonicalClaimUrl);
 const breadcrumbSchema = buildBreadcrumbSchema(claim.title, canonicalClaimUrl);
 const orgSchema = buildOrganizationSchema();
