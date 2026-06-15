@@ -16,7 +16,8 @@ if (supabaseUrl && supabaseKey) {
   const { data } = await supabase.from('claims').select('slug, updated_at');
   if (data) {
     for (const claim of data) {
-      const url = `https://open.healthintegrityproject.org/claims/${claim.slug}/evidence`;
+      // Sitemap <loc> emits trailing slash; key must match exactly.
+      const url = `https://open.healthintegrityproject.org/claims/${claim.slug}/evidence/`;
       lastmodMap[url] = new Date(claim.updated_at);
     }
   }
@@ -27,8 +28,12 @@ export default defineConfig({
   integrations: [
     sitemap({
       serialize(item) {
+        const isClaim = item.url.includes('/claims/');
+        // Home: daily/1.0. Claim pages: weekly/0.8.
+        item.changefreq = isClaim ? 'weekly' : 'daily';
+        item.priority = isClaim ? 0.8 : 1.0;
         if (lastmodMap[item.url]) {
-          return { ...item, lastmod: lastmodMap[item.url] };
+          item.lastmod = lastmodMap[item.url];
         }
         return item;
       },

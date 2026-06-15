@@ -1,0 +1,2 @@
+# Consolidate archive.* signal onto canonical open.* (301)
+https://archive.healthintegrityproject.org/* https://open.healthintegrityproject.org/:splat 301!
