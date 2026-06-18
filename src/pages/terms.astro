@@ -1,0 +1,106 @@
+---
+import Base from '../layouts/Base.astro';
+const lastUpdated = new Date().toLocaleDateString();
+---
+<Base
+  title="Terms of Service | The Health Integrity Project"
+  description="Terms of Service and data usage policies for the Health Integrity Project educational platform, covering research standards, user responsibilities, and limitation of liability."
+  canonicalUrl="/terms"
+>
+  <h1 class="text-4xl font-bold text-foreground mb-8">Terms of Service & Data Usage</h1>
+
+  <div class="border border-border bg-card rounded-lg p-8 space-y-6">
+    <section>
+      <h2 class="text-2xl font-semibold text-foreground mb-4">Platform Purpose</h2>
+      <p class="mb-4">
+        HealthIntegrityProject is an educational platform that provides research-backed affirmations
+        and insights specifically focused on women's experiences, health, and empowerment. Our mission is to
+        bridge the gap between scientific research and practical self-empowerment tools.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-semibold text-foreground mb-4">Research Standards</h2>
+      <p class="mb-4">All research featured on our platform adheres to strict quality standards:</p>
+      <ul class="list-disc list-inside space-y-2 ml-4">
+        <li><strong>Peer Review:</strong> Only peer-reviewed studies from reputable journals</li>
+        <li><strong>Sample Size Transparency:</strong> Clear indication of study sample sizes and limitations</li>
+        <li><strong>Population Representation:</strong> Diversity metrics and demographic information</li>
+        <li><strong>Research Consensus:</strong> Multiple studies supporting each affirmation when available</li>
+        <li><strong>Evidence Quality:</strong> Strength of evidence clearly communicated</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-semibold text-foreground mb-4">Data Usage Terms</h2>
+      <p class="mb-4">By using our platform, you agree that:</p>
+      <ul class="list-disc list-inside space-y-2 ml-4">
+        <li>Research data is for educational and personal empowerment purposes only</li>
+        <li>Information should not replace professional medical or psychological advice</li>
+        <li>You will not misrepresent or misuse the research findings</li>
+        <li>Attribution to original research sources is required for any sharing</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-semibold text-foreground mb-4">User Responsibilities</h2>
+      <p class="mb-4">Users are expected to:</p>
+      <ul class="list-disc list-inside space-y-2 ml-4">
+        <li>Use the platform respectfully and in accordance with its educational purpose</li>
+        <li>Understand that research findings are generalizations and may not apply to every individual</li>
+        <li>Consult healthcare professionals for medical concerns</li>
+        <li>Report any technical issues or content concerns promptly</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-semibold text-foreground mb-4">Limitation of Liability</h2>
+      <p class="mb-4">
+        While we strive for accuracy, this platform is for educational purposes only. We are not liable for:
+      </p>
+      <ul class="list-disc list-inside space-y-2 ml-4">
+        <li>Individual outcomes based on research findings</li>
+        <li>Decisions made using platform information</li>
+        <li>Changes in research consensus over time</li>
+        <li>Technical issues or service interruptions</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-semibold text-foreground mb-4">Research Methodology Transparency</h2>
+      <p class="mb-4">
+        We believe in complete transparency about research quality. Each study includes:
+      </p>
+      <ul class="list-disc list-inside space-y-2 ml-4">
+        <li><strong>Sample Size Scoring:</strong> Clear indicators of study participant numbers</li>
+        <li><strong>Representation Metrics:</strong> Information about demographic diversity</li>
+        <li><strong>Consensus Indicators:</strong> How many studies support each finding</li>
+        <li><strong>Evidence Strength:</strong> Quality assessment of the research methodology</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-semibold text-foreground mb-4">Updates and Changes</h2>
+      <p class="mb-4">
+        We reserve the right to update these terms as our platform evolves. Users will be notified of
+        significant changes, and continued use constitutes acceptance of updated terms.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-semibold text-foreground mb-4">Contact</h2>
+      <p>
+        For questions about these terms or our data usage policies, contact us at{' '}
+        <a href="mailto:legal@healthintegrityproject.org" class="text-accent hover:underline">
+          legal@healthintegrityproject.org
+        </a>
+      </p>
+    </section>
+
+    <div class="border-t border-border pt-6 mt-8">
+      <p class="text-sm text-muted-foreground">
+        Last updated: {lastUpdated}
+      </p>
+    </div>
+  </div>
+</Base>

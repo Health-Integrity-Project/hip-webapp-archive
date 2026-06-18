@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { readCache, writeCache, readCacheIndex } from './claimsCache';
 import type { ClaimEvidenceData, Publication, PublicationScore, ExpertProfile } from './types';
 
 export async function getAllClaims(): Promise<import('./types').Claim[]> {
@@ -36,17 +37,41 @@ export async function getAllClaims(): Promise<import('./types').Claim[]> {
   }));
 }
 
-export async function getAllClaimSlugs(): Promise<string[]> {
+/** Lightweight freshness probe: one query, slug + updated_at for every claim. */
+export async function getAllClaimRefs(): Promise<{ slug: string; updated_at: string }[]> {
   const { data, error } = await supabase
     .from('claims')
-    .select('slug')
+    .select('slug, updated_at')
     .order('updated_at', { ascending: false });
 
-  if (error) throw new Error(`Failed to fetch claim slugs: ${error.message}`);
-  return (data ?? []).map((c) => c.slug).filter(Boolean);
+  if (error) throw new Error(`Failed to fetch claim refs: ${error.message}`);
+  return (data ?? []).filter((c) => c.slug);
 }
 
-export async function getClaimEvidence(slug: string): Promise<ClaimEvidenceData | null> {
+export async function getAllClaimSlugs(): Promise<string[]> {
+  return (await getAllClaimRefs()).map((c) => c.slug);
+}
+
+/**
+ * Cache-aware evidence fetch. Pass the DB updated_at (from getAllClaimRefs) to
+ * skip the DB entirely when the on-disk cache is current. Omit it to always
+ * fetch fresh (and refresh the cache).
+ */
+export async function getClaimEvidence(
+  slug: string,
+  dbUpdatedAt?: string
+): Promise<ClaimEvidenceData | null> {
+  if (dbUpdatedAt) {
+    const cached = await readCache<ClaimEvidenceData>(slug);
+    if (cached && cached.updated_at === dbUpdatedAt) return cached;
+  }
+
+  const fresh = await fetchClaimEvidenceFromDb(slug);
+  if (fresh) await writeCache(slug, fresh);
+  return fresh;
+}
+
+async function fetchClaimEvidenceFromDb(slug: string): Promise<ClaimEvidenceData | null> {
   const { data: claim, error: claimError } = await supabase
     .from('claims')
     .select('id, slug, title, description, broad_category, evidence_status, updated_at, labels, created_at')

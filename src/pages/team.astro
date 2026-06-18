@@ -1,0 +1,141 @@
+---
+import Base from '../layouts/Base.astro';
+
+interface TeamMember {
+  name: string;
+  role: string;
+  bio: string;
+  avatar_url: string;
+  linkedin_url?: string;
+}
+
+const founders: TeamMember[] = [
+  {
+    name: "Lorena Pantano",
+    role: "CEO / Chief Product Officer",
+    bio: "Leading product strategy and company vision with 10+ years in health tech innovation.",
+    avatar_url: "/team/lorena-pantano.jpg"
+  },
+  {
+    name: "Meeta Mistry",
+    role: "Chief Scientific Officer",
+    bio: "Seasoned bioinformatician with extensive experience in data analysis, training and science education.",
+    avatar_url: "/team/meeta-mistry.jpg"
+  },
+  {
+    name: "Judit Flo Gaya",
+    role: "Chief Security Officer",
+    bio: "Cybersecurity expert ensuring the highest standards of data protection and privacy.",
+    avatar_url: "/team/judit-flo.png"
+  },
+  {
+    name: "Lina Faller",
+    role: "Chief Technology Officer",
+    bio: "Full-stack engineer with expertise in scalable health platforms and AI integration.",
+    avatar_url: "/team/lina-faller.jpg"
+  }
+];
+
+const contributors: TeamMember[] = [
+  {
+    name: "Viveka Patil",
+    role: "Science Communication",
+    bio: "MS in Bioinformatics with focus on genomics data analysis; passionate about healthcare access and transparency.",
+    avatar_url: "/team/viveka.png",
+    linkedin_url: "https://www.linkedin.com/in/viveka-patil-934b3123b/"
+  }
+];
+---
+
+<Base
+  title="Our Team | The Health Integrity Project"
+  description="Meet the founders and contributors of The Health Integrity Project — a team of experts dedicated to revolutionizing women's health through data-driven insights and evidence-based research."
+  canonicalUrl="/team"
+>
+  <!-- Header Section -->
+  <div class="text-center mb-12">
+    <h1 class="text-4xl md:text-5xl font-bold text-foreground mb-6 pb-2 leading-[1.15]">
+      Meet Our Team
+    </h1>
+    <p class="text-xl text-muted-foreground max-w-3xl mx-auto">
+      Passionate experts dedicated to revolutionizing women's health through data-driven insights and evidence-based research.
+    </p>
+  </div>
+
+  <!-- Founders Section -->
+  <section class="mb-20">
+    <h2 class="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+      Our Founders
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+      {founders.map((founder) => (
+        <div class="border border-border bg-card rounded-lg p-6 transition-all duration-300 hover:shadow-lg hover:border-primary/30">
+          <div class="text-center pb-4">
+            <img
+              src={founder.avatar_url}
+              alt={founder.name}
+              class="w-24 h-24 mx-auto mb-4 rounded-full object-cover"
+            />
+            <h3 class="text-xl font-semibold">{founder.name}</h3>
+            <span class="mt-2 inline-flex items-center rounded-md bg-secondary text-secondary-foreground px-2 py-0.5 text-xs font-medium">{founder.role}</span>
+          </div>
+          <p class="text-center text-sm leading-relaxed text-muted-foreground">
+            {founder.bio}
+          </p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Contributors Section -->
+  <section class="mb-20">
+    <h2 class="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+      Contributors
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      {contributors.map((contributor) => (
+        <div class="border border-border bg-card rounded-lg p-6 transition-all duration-300 hover:shadow-lg hover:border-primary/30">
+          <div class="text-center pb-4">
+            {contributor.linkedin_url ? (
+              <a href={contributor.linkedin_url} target="_blank" rel="noopener noreferrer" class="block">
+                <img
+                  src={contributor.avatar_url}
+                  alt={contributor.name}
+                  class="w-24 h-24 mx-auto mb-4 rounded-full object-cover"
+                />
+                <h3 class="text-xl font-semibold hover:text-primary transition-colors">{contributor.name}</h3>
+              </a>
+            ) : (
+              <>
+                <img
+                  src={contributor.avatar_url}
+                  alt={contributor.name}
+                  class="w-24 h-24 mx-auto mb-4 rounded-full object-cover"
+                />
+                <h3 class="text-xl font-semibold">{contributor.name}</h3>
+              </>
+            )}
+            <span class="mt-2 inline-flex items-center rounded-md bg-secondary text-secondary-foreground px-2 py-0.5 text-xs font-medium">{contributor.role}</span>
+          </div>
+          <p class="text-center text-sm leading-relaxed text-muted-foreground">
+            {contributor.bio}
+          </p>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>

@@ -5,6 +5,10 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:incremental": "astro build",
+    "build:fresh": "CLAIMS_CACHE=off astro build",
+    "build:clean": "npm run cache:nuke && astro build",
+    "cache:nuke": "rm -rf .cache",
     "preview": "astro preview"
   },
   "dependencies": {

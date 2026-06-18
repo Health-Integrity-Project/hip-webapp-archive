@@ -1,0 +1,278 @@
+---
+import Base from '../layouts/Base.astro';
+
+const steps = [
+  {
+    n: 1,
+    title: 'Validation',
+    objective:
+      'Identify fundamental issues that may invalidate the credibility of the research before deeper review.',
+    note: 'If any validation issue is found, the publication is marked as Invalid and further evaluation is not conducted.',
+    groups: [
+      {
+        heading: 'Conflict of Interest',
+        items: [
+          'Was the study funded by a company that would benefit from the results?',
+          'Do authors receive personal fees or own shares in such companies?',
+        ],
+      },
+      {
+        heading: 'Narrative Review',
+        items: [
+          'Is this a narrative review, commentary, or editorial summarizing results across studies?',
+          'Not a primary research article — conclusions based on qualitative interpretation',
+        ],
+      },
+    ],
+  },
+  {
+    n: 2,
+    title: 'Quality Assessment',
+    objective: 'Evaluate the methodological rigor of the study.',
+    note: 'If any quality criterion is not met, the publication is classified as Inconclusive.',
+    groups: [
+      {
+        heading: 'Study Design',
+        items: [
+          'Is the study design appropriate for the research question?',
+          'Are outcomes clearly defined and consistently measured?',
+        ],
+      },
+      {
+        heading: 'Control Group',
+        items: [
+          'Are control or comparison groups present and properly selected?',
+          'May include wildtype, baseline, placebo, standard of care, or matched cohort',
+        ],
+      },
+      {
+        heading: 'Bias Addressed',
+        items: [
+          'Were confounding variables identified and tracked?',
+          'Important factors like age, sex, comorbidities, and socioeconomic factors considered',
+          'Mitigation methods include randomization, blinding, balanced cohorts',
+        ],
+      },
+      {
+        heading: 'Statistics',
+        items: [
+          'Were statistical tests appropriate for the study design and data type?',
+          'Are assumptions stated and checked?',
+          'Was multiple test correction applied?',
+        ],
+      },
+    ],
+  },
+  {
+    n: 3,
+    title: 'Evidence Strength',
+    objective: "Determine whether the paper's findings directly settle the claim.",
+    definitions: [
+      {
+        term: 'Strong',
+        text: 'Statistically significant result that directly speaks to the claim — clear support or clear refutation of the specific assertion.',
+      },
+      {
+        term: 'Weak',
+        text: 'Non-significant result, or gaps (wrong endpoint/population, underpowered, marginal effect) that prevent the paper from settling the claim either way.',
+      },
+    ],
+    info: 'Weak evidence forces the paper to Inconclusive. Strong evidence continues to the Human Study step.',
+  },
+  {
+    n: 4,
+    title: 'Human Study Verification',
+    objective: 'Determine whether findings are directly applicable to human populations.',
+    definitions: [
+      { term: 'Cell Culture', text: 'Studies using cell lines' },
+      { term: 'Animal Models', text: 'Studies using animal subjects' },
+      { term: 'Human Studies', text: 'Research conducted in human participants' },
+    ],
+    info: 'Cell culture and animal model studies are categorized as Not Tested in Humans and require further human research.',
+  },
+  {
+    n: 5,
+    title: 'Study Type Classification',
+    objective:
+      'Categorize based on specific study design to guide interpretation of evidence strength.',
+    groups: [
+      {
+        heading: 'Study Tags',
+        items: [
+          'Observational Study: Researchers observe participants without intervention (cohort, case-control, cross-sectional studies)',
+          'Clinical Trial: Experimental study with active intervention testing effectiveness and safety of treatments',
+          'Women Not Included: Tracks gender representation when women/females were excluded',
+        ],
+      },
+      {
+        heading: 'Population Representation',
+        items: ['Ethnicity of study participants', 'Age ranges of participants'],
+      },
+    ],
+  },
+  {
+    n: 6,
+    title: 'Sample Size Classification',
+    objective: 'Assess robustness and generalizability based on participant numbers.',
+    definitions: [
+      { term: 'Less than 100 participants', text: 'Limited Tested in Humans' },
+      { term: '100 to 500,000 participants', text: 'Tested in Humans' },
+      { term: 'More than 500,000 participants', text: 'Widely Tested in Humans' },
+    ],
+  },
+  {
+    n: 7,
+    title: 'Paper Stance',
+    objective:
+      "Conclude whether the paper's evidence supports or contradicts the claim being reviewed.",
+    definitions: [
+      { term: 'Supporting', text: "The paper's evidence is consistent with the claim." },
+      { term: 'Contradicting', text: "The paper's evidence runs against the claim." },
+    ],
+    info: 'Stance is determined by the reviewer at the end, based on all prior steps. It is not assigned at intake.',
+  },
+];
+
+const summary = [
+  ['Validation', 'Screens for fundamental issues — conflict of interest and narrative reviews'],
+  ['Quality Checks', 'Evaluates study design, control groups, bias management, and statistical methods'],
+  ['Evidence Strength', 'Determines if the result directly settles the claim (Strong → continue; Weak → Inconclusive)'],
+  ['Human Study Verification', 'Confirms findings are applicable to human populations'],
+  ['Study Type', 'Distinguishes observational studies from clinical trials'],
+  ['Sample Size Classification', 'Assesses robustness and generalizability based on participant numbers'],
+  ['Paper Stance', 'Reviewer concludes whether the paper supports or contradicts the claim'],
+];
+
+const outcomes = [
+  ['Invalid', 'The study has fundamental issues (conflict of interest, is a review/meta-analysis, etc.)'],
+  ['Inconclusive', 'The study has quality issues in design, control group, bias handling, or statistics'],
+  ['Not Tested in Humans', 'The study was conducted on cells, animals, primates or other non-human systems'],
+  ['Limited Tested in Humans', 'The study has fewer than 100 human participants'],
+  ['Tested in Humans', 'The study has 100-500,000 human participants'],
+  ['Widely Tested in Humans', 'The study has more than 500,000 human participants'],
+];
+---
+
+<Base
+  title="Research Workflow | The Health Integrity Project"
+  description="Learn how we review and classify scientific research for women's health claims through a seven-step methodology covering validation, study quality, evidence strength, human testing, study type, sample size, and paper stance."
+  canonicalUrl="/workflow"
+>
+  <header class="text-center mb-10">
+    <h1 class="text-4xl md:text-5xl font-bold text-foreground mb-4">
+      Research Publication Classification
+    </h1>
+    <p class="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
+      Our workflow helps classify research publications based on study quality, evidence strength,
+      population type, and sample size to provide clear evidence ratings.
+    </p>
+  </header>
+
+  <section class="mb-10 border border-border bg-card rounded-lg p-6">
+    <h2 class="text-xl font-semibold text-foreground mb-4">About Our Classification System</h2>
+    <p class="text-muted-foreground mb-3">
+      Our seven-step workflow ensures consistent and transparent evaluation of research
+      publications:
+    </p>
+    <ol class="list-decimal list-inside space-y-2 text-muted-foreground ml-2">
+      {summary.map(([name, desc]) => (
+        <li><strong class="text-foreground">{name}:</strong> {desc}</li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold text-foreground mb-3">Full Review Process</h2>
+    <p class="text-muted-foreground mb-8">
+      Each health and wellness claim submitted to Evidence Decoded is reviewed by one or more
+      experts using this standardized workflow to ensure rigorous, transparent evaluation.
+    </p>
+
+    <div class="space-y-6">
+      {steps.map((step) => (
+        <article class="border border-border bg-card rounded-lg p-6">
+          <h3 class="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white text-sm font-bold">
+              {step.n}
+            </span>
+            {step.title}
+          </h3>
+
+          <p class="text-foreground mb-3">
+            <strong>Objective:</strong> {step.objective}
+          </p>
+
+          {step.note && (
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-3 rounded-r">
+              <p class="text-sm text-amber-900">
+                <strong>Note:</strong> {step.note}
+              </p>
+            </div>
+          )}
+
+          {step.groups && (
+            <div class="space-y-3 text-sm text-foreground">
+              {step.groups.map((group) => (
+                <div>
+                  <strong class="text-foreground">{group.heading}:</strong>
+                  <ul class="list-disc ml-6 mt-1 text-muted-foreground">
+                    {group.items.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {step.definitions && (
+            <div class="space-y-2 text-sm text-muted-foreground">
+              {step.definitions.map((def) => (
+                <div>
+                  <strong class="text-foreground">{def.term}:</strong> {def.text}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {step.info && (
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mt-3 rounded-r">
+              <p class="text-sm text-blue-900">{step.info}</p>
+            </div>
+          )}
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="mb-10 border border-border bg-card rounded-lg p-6">
+    <h2 class="text-xl font-semibold text-foreground mb-4">Classification Outcomes</h2>
+    <p class="text-muted-foreground mb-4">
+      Depending on how a publication moves through the workflow, it is assigned one of the following
+      classifications:
+    </p>
+    <dl class="space-y-3">
+      {outcomes.map(([name, desc]) => (
+        <div>
+          <dt class="font-semibold text-foreground">{name}</dt>
+          <dd class="text-sm text-muted-foreground ml-0">{desc}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  <section class="border border-border bg-card rounded-lg p-6">
+    <h2 class="text-lg font-semibold text-foreground mb-3">Expert Review Comments</h2>
+    <p class="text-sm text-muted-foreground mb-3">
+      After completing all seven steps, experts provide a comprehensive summary including:
+    </p>
+    <ul class="list-disc ml-6 text-sm text-muted-foreground space-y-1">
+      <li>
+        Study overview: who/what is being tested, design (randomization, blinding, controls),
+        overall conclusion
+      </li>
+      <li>Classification rationale and limitations from each workflow step</li>
+      <li>Suggestions for improvement</li>
+    </ul>
+  </section>
+</Base>

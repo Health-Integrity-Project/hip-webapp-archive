@@ -1,173 +1,315 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getAllClaims } from '../lib/fetchClaimEvidence';
-import type { Claim } from '../lib/types';
-import { buildOrganizationSchema, buildWebSiteSchema } from '../lib/structuredData';
 
-const claims = await getAllClaims();
-const orgSchema = buildOrganizationSchema();
-const siteSchema = buildWebSiteSchema();
+const appUrl = 'https://healthintegrityproject.org';
 
-function getEvidenceStatusColor(status: string): string {
-  const colors: Record<string, string> = {
-    'Awaiting Evidence': 'bg-gray-600',
-    'Evidence Supports': 'bg-green-500',
-    'Evidence Disproves': 'bg-red-500',
-    'Inconclusive': 'bg-amber-400',
-  };
-  return colors[status] ?? 'bg-gray-600';
-}
+const purposes = [
+  {
+    title: 'The Problem',
+    description:
+      "Health misinformation is everywhere. From social media influencers to wellness brands, women face conflicting claims about what's healthy, effective, or safe. Critical health decisions deserve better than guesswork.",
+  },
+  {
+    title: 'Our Solution',
+    description:
+      "We connect you with expert-reviewed health claims backed by peer-reviewed research. We translate complex studies into clear insights, showing you what works, what doesn't, and what the science actually says.",
+  },
+];
 
-const LABEL_COLORS: Record<string, string> = {
-  // reproductive / lifecycle — teal
-  pregnancy: 'border-teal-500 text-teal-700',
-  fertility: 'border-teal-500 text-teal-700',
-  contraception: 'border-teal-500 text-teal-700',
-  menstruation: 'border-teal-500 text-teal-700',
-  perimenopause: 'border-teal-500 text-teal-700',
-  menopause: 'border-teal-500 text-teal-700',
-  postmenopause: 'border-teal-500 text-teal-700',
-  breastfeeding: 'border-teal-500 text-teal-700',
-  'sexual-health': 'border-teal-500 text-teal-700',
-  'pelvic-floor': 'border-teal-500 text-teal-700',
-  // nutrition — green
-  nutrition: 'border-green-500 text-green-700',
-  diet: 'border-green-500 text-green-700',
-  supplements: 'border-green-500 text-green-700',
-  hydration: 'border-green-500 text-green-700',
-  // physical — blue
-  fitness: 'border-blue-500 text-blue-700',
-  'body-composition': 'border-blue-500 text-blue-700',
-  exercise: 'border-blue-500 text-blue-700',
-  'weight-management': 'border-blue-500 text-blue-700',
-  sleep: 'border-blue-500 text-blue-700',
-  energy: 'border-blue-500 text-blue-700',
-  // body systems — purple
-  'bone-health': 'border-purple-500 text-purple-700',
-  'heart-health': 'border-purple-500 text-purple-700',
-  'hormone-health': 'border-purple-500 text-purple-700',
-  'gut-health': 'border-purple-500 text-purple-700',
-  'skin-health': 'border-purple-500 text-purple-700',
-  immunity: 'border-purple-500 text-purple-700',
-  inflammation: 'border-purple-500 text-purple-700',
-  // mental — indigo
-  'mental-health': 'border-indigo-500 text-indigo-700',
-  'cognitive-health': 'border-indigo-500 text-indigo-700',
-  stress: 'border-indigo-500 text-indigo-700',
-  mood: 'border-indigo-500 text-indigo-700',
-  anxiety: 'border-indigo-500 text-indigo-700',
-  adhd: 'border-indigo-500 text-indigo-700',
-  autism: 'border-indigo-500 text-indigo-700',
-  depression: 'border-indigo-500 text-indigo-700',
-};
-
-function getLabelColor(value: string): string {
-  return LABEL_COLORS[value] ?? 'border-slate-400 text-slate-600';
-}
-
-function getLabelDisplay(value: string): string {
-  return value
-    .split('-')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
-}
-
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' });
-}
+const researchSteps = [
+  {
+    title: 'Preclinical',
+    subtitle: 'Lab Testing',
+    description: 'Testing ideas in cells and animals before moving to human trials.',
+    whatIsIt:
+      'Preclinical research tests potential treatments in laboratory settings—first in cells (in vitro), then in animals (in vivo)—before any human testing begins.',
+    example:
+      'Scientists discover a compound that kills cancer cells in a petri dish. They then test it in mice with tumors to see if it works in a living body, what dose is safe, and what side effects occur.',
+    strengths: [
+      'Tests safety before human exposure',
+      'Allows precise control of variables',
+      'Can study biological mechanisms in detail',
+      'Faster and less expensive than human trials',
+    ],
+    limitations: [
+      'Animal biology differs from human biology',
+      'Many treatments that work in animals fail in humans (about 90%)',
+      "Lab conditions don't match real-world complexity",
+      'Ethical concerns about animal testing',
+    ],
+    realWorld:
+      "Most potential drugs never make it past this stage. For example, many Alzheimer's treatments showed promise in mice but failed to help humans because mouse brains age differently than human brains.",
+  },
+  {
+    title: 'Observational Studies',
+    subtitle: 'Watching & Learning',
+    description: 'Scientists observe people in their everyday lives to spot patterns and connections.',
+    whatIsIt:
+      'Observational studies watch groups of people over time without changing anything about their lives. Researchers collect data on habits, health conditions, and outcomes.',
+    example:
+      "A study might follow 10,000 women for 10 years, tracking their coffee consumption and heart health. If women who drink coffee have fewer heart attacks, that's an interesting pattern—but it doesn't prove coffee prevents heart disease.",
+    strengths: [
+      'Good for finding patterns and generating hypotheses',
+      'Can study large populations over long periods',
+      'Ethical when experiments would be harmful',
+      'Reflects real-world conditions',
+    ],
+    limitations: [
+      'Cannot prove cause and effect',
+      'Many confounding factors (coffee drinkers might also exercise more)',
+      'Participants may not accurately report behaviors',
+      'Cannot control for all variables',
+    ],
+    realWorld:
+      "The link between smoking and lung cancer was first discovered through observational studies. While they couldn't prove causation alone, they provided crucial early evidence that led to further research.",
+  },
+  {
+    title: 'Clinical Trials',
+    subtitle: 'Human Testing',
+    description: 'Carefully controlled studies testing safety and effectiveness in people.',
+    whatIsIt:
+      'Clinical trials test treatments in humans through carefully designed phases. They use control groups, randomization, and blinding to ensure results are reliable.',
+    example:
+      'A new menopause treatment is tested in 500 women. Half receive the treatment, half get a placebo. Neither doctors nor patients know who gets what (double-blind). After 6 months, researchers compare symptoms between groups.',
+    strengths: [
+      'Directly tests effects in humans',
+      'Randomization reduces bias',
+      'Placebo controls account for psychological effects',
+      'Regulatory oversight ensures safety',
+      'Can prove cause and effect when well-designed',
+    ],
+    limitations: [
+      'Expensive and time-consuming (often years)',
+      'Strict criteria may exclude diverse populations',
+      'Short trial periods may miss long-term effects',
+      'Dropout rates can affect results',
+      'Publication bias (negative results often unpublished)',
+    ],
+    realWorld:
+      'The COVID-19 vaccine trials enrolled tens of thousands of people and showed clear evidence: vaccinated groups had significantly fewer infections than placebo groups, proving the vaccines work.',
+  },
+];
 ---
 
 <Base
   title="The Health Integrity Project"
-  description={`Archive of ${claims.length} health claims with expert-reviewed scientific evidence. See what peer-reviewed research says about nutrition, supplements, exercise, and medical treatments.`}
+  description="The Health Integrity Project (Women Edition) provides expert-reviewed, evidence-based health claims for women. Learn our mission to fight health misinformation, the topics we cover, how scientific evidence is built, and what makes research trustworthy."
   canonicalUrl="/"
-  ogType="website"
-  jsonLd={[orgSchema, siteSchema]}
 >
-  <h1 class="text-3xl font-bold mb-4">The Health Integrity Project</h1>
-  <p class="text-muted-foreground mb-10 max-w-2xl">
-    Expert-reviewed evidence for health claims that matter to you. For voting, commenting, and expert reviews, visit the
-    <a href="https://healthintegrityproject.org" class="text-teal-600 hover:underline">live app</a>.
-  </p>
+  {/* Hero Section */}
+  <section class="text-center mb-16">
+    <p class="text-sm sm:text-base md:text-xl text-muted-foreground font-bold mb-2">Women Edition</p>
+    <h1 class="text-4xl md:text-5xl font-bold text-foreground leading-tight mb-4">
+      The Health Integrity Project
+    </h1>
+    <p class="text-lg sm:text-xl md:text-2xl text-muted-foreground mb-6">
+      Expert-Reviewed Evidence for
+      <a href={appUrl} class="inline-flex items-center text-accent underline font-bold hover:text-primary transition-colors">
+        Health Claims →
+      </a>
+    </p>
+    <p class="text-base sm:text-lg md:text-xl text-foreground leading-relaxed max-w-2xl mx-auto">
+      Building trust through transparency. Learn how to evaluate and trust health information
+      with confidence through expert-backed scientific insights and community wisdom.
+    </p>
+  </section>
 
-  <section>
-    <h2 class="text-xl font-semibold mb-6 text-foreground">All Claims ({claims.length})</h2>
-    <ul class="space-y-4">
-      {claims.map((claim: Claim) => (
-        <li>
-          <a
-            href={`/claims/${claim.slug}/evidence`}
-            class="block rounded-lg border border-border bg-card/50 overflow-hidden hover:shadow-lg transition-shadow"
-          >
-            {/* Evidence status banner */}
-            {claim.evidence_status && (
-              <div class={`${getEvidenceStatusColor(claim.evidence_status)} px-4 py-2 flex items-center gap-2 rounded-t-lg`}>
-                <span class="font-semibold text-sm uppercase tracking-wide text-white">
-                  {claim.evidence_status}
-                </span>
-                <svg class="w-4 h-4 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="8" x2="12" y2="12" />
-                  <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
-              </div>
-            )}
-
-            <div class="px-4 pt-3 pb-4">
-              {/* Category + labels */}
-              <div class="flex flex-wrap gap-2 mb-3">
-                {claim.broad_category && (
-                  <span class="text-xs font-medium px-2 py-0.5 rounded-full border border-border text-foreground bg-background">
-                    {claim.broad_category}
-                  </span>
-                )}
-                {(claim.labels ?? []).map((label: string) => (
-                  <span class={`text-xs font-medium border rounded-full px-2 py-0.5 ${getLabelColor(label)}`}>
-                    {getLabelDisplay(label)}
-                  </span>
-                ))}
-              </div>
-
-              {/* Claim title + paper count */}
-              <p class="font-bold text-lg text-foreground mb-4">
-                {claim.title}
-                {claim.publication_count > 0 && (
-                  <span class="ml-3 text-sm font-normal text-muted-foreground">
-                    {claim.publication_count} paper{claim.publication_count === 1 ? '' : 's'}
-                  </span>
-                )}
-              </p>
-
-              {/* Action buttons */}
-              <div class="border-t border-border pt-3 space-y-2">
-                <div class="flex flex-wrap gap-2">
-                  {claim.publication_count > 0 && (
-                    <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-sm font-medium shadow-md">
-                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.75 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                      </svg>
-                      View Evidence
-                    </span>
-                  )}
-                </div>
-
-                {/* Date */}
-                <div class="flex items-center justify-end gap-2">
-                  <div class="flex items-center gap-1 text-xs text-muted-foreground">
-                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                      <line x1="16" y1="2" x2="16" y2="6" />
-                      <line x1="8" y1="2" x2="8" y2="6" />
-                      <line x1="3" y1="10" x2="21" y2="10" />
-                    </svg>
-                    <span>Submitted {formatDate(claim.created_at)}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </li>
+  {/* Purpose Section */}
+  <section class="mb-16">
+    <div class="text-center mb-8">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
+        Our <span class="text-primary">Purpose</span>
+      </h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {purposes.map((purpose) => (
+        <div class="border border-border bg-card rounded-lg p-6">
+          <h3 class="text-xl font-semibold text-foreground mb-4">{purpose.title}</h3>
+          <p class="text-muted-foreground leading-relaxed">{purpose.description}</p>
+        </div>
       ))}
-    </ul>
+    </div>
+  </section>
+
+  {/* Features Section */}
+  <section class="mb-16">
+    <div class="text-center mb-8">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
+        What We <span class="text-accent">Cover</span>
+      </h2>
+      <p class="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
+        From health to wellness - we evaluate everything that matters for women's health decisions in this edition.
+      </p>
+      <a href={appUrl} class="inline-flex items-center mt-4 font-bold text-foreground hover:text-primary transition-colors">
+        Browse all health claims →
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      {/* Health */}
+      <div class="border border-border bg-card rounded-lg p-6 text-center">
+        <h3 class="text-primary text-lg sm:text-xl md:text-2xl font-semibold mb-4">Health</h3>
+        <ul class="space-y-2">
+          <li class="font-semibold text-sm sm:text-base">Hormone Health</li>
+          <li class="font-semibold text-sm sm:text-base">Perimenopause</li>
+          <li class="font-semibold text-sm sm:text-base">Pregnancy</li>
+        </ul>
+      </div>
+
+      {/* Wellness */}
+      <div class="border border-border bg-card rounded-lg p-6 text-center">
+        <h3 class="text-accent text-lg sm:text-xl md:text-2xl font-semibold mb-4">Wellness</h3>
+        <ul class="space-y-2">
+          <li class="font-semibold text-sm sm:text-base">Supplements</li>
+          <li class="font-semibold text-sm sm:text-base">Fitness</li>
+          <li class="font-semibold text-sm sm:text-base">Nutrition</li>
+        </ul>
+      </div>
+
+      {/* Mind */}
+      <div class="border border-border bg-card rounded-lg p-6 text-center">
+        <h3 class="text-primary text-lg sm:text-xl md:text-2xl font-semibold mb-4">Mind</h3>
+        <ul class="space-y-2">
+          <li class="font-semibold text-sm sm:text-base">ADHD</li>
+          <li class="font-semibold text-sm sm:text-base">Anxiety</li>
+          <li class="font-semibold text-sm sm:text-base">Depression</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {/* Science Path Section */}
+  <section class="mb-16">
+    <div class="text-center mb-8">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
+        The Research <span class="text-primary">Journey</span>
+      </h2>
+      <p class="text-lg text-muted-foreground max-w-3xl mx-auto">
+        Understanding how scientific evidence is built—from initial observations to proven treatments.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+      {researchSteps.map((step) => (
+        <details class="group border border-border bg-card rounded-lg p-6 [&_summary::-webkit-details-marker]:hidden">
+          <summary class="cursor-pointer list-none">
+            <h3 class="text-2xl font-semibold text-foreground">{step.title}</h3>
+            <p class="text-lg font-medium text-primary mb-4">{step.subtitle}</p>
+            <p class="text-muted-foreground">{step.description}</p>
+            <span class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-accent">
+              <span class="group-open:hidden">Learn more →</span>
+              <span class="hidden group-open:inline">Show less ↑</span>
+            </span>
+          </summary>
+
+          <div class="mt-6">
+            <h4 class="font-semibold text-lg mb-2 text-foreground">What is it?</h4>
+            <p class="text-muted-foreground leading-relaxed mb-6">{step.whatIsIt}</p>
+
+            <div class="bg-secondary rounded-lg p-4 mb-6">
+              <h4 class="font-semibold text-base mb-2">💡 Real Example</h4>
+              <p class="text-sm text-foreground/90 leading-relaxed">{step.example}</p>
+            </div>
+
+            <h4 class="font-semibold text-lg mb-3 text-foreground">✓ Strengths</h4>
+            <ul class="space-y-2 mb-6">
+              {step.strengths.map((strength) => (
+                <li class="flex items-start gap-2">
+                  <span class="text-green-600 text-sm">•</span>
+                  <span class="text-muted-foreground text-sm">{strength}</span>
+                </li>
+              ))}
+            </ul>
+
+            <h4 class="font-semibold text-lg mb-3 text-foreground">⚠ Limitations</h4>
+            <ul class="space-y-2 mb-6">
+              {step.limitations.map((limitation) => (
+                <li class="flex items-start gap-2">
+                  <span class="text-amber-600 text-sm">•</span>
+                  <span class="text-muted-foreground text-sm">{limitation}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div class="bg-secondary rounded-lg p-4">
+              <h4 class="font-semibold text-base mb-2">🌍 Real-World Impact</h4>
+              <p class="text-sm text-foreground/90 leading-relaxed">{step.realWorld}</p>
+            </div>
+          </div>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  {/* Education Section */}
+  <section class="mb-16">
+    <div class="text-center mb-8">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
+        Understanding <span class="text-primary">Research Quality</span>
+      </h2>
+      <p class="text-lg text-muted-foreground">
+        Learn why certain factors make research more trustworthy when evaluating health claims
+      </p>
+    </div>
+
+    <div class="max-w-2xl mx-auto mb-8">
+      <p class="text-lg font-medium text-foreground text-center mb-4">
+        75% agree that scientific research methods are the best way to find out whether something is true or false
+        <a href="https://www.nature.com/articles/s41562-024-02090-5.pdf" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline ml-1" aria-label="Nature Human Behaviour volume 9, pages 713–730 (2025)">[source]</a>
+      </p>
+      <h3 class="text-xl md:text-2xl font-semibold text-accent text-center mb-4">
+        Trust science when it's rigorous and reported honestly.
+      </h3>
+      <p class="text-base text-foreground leading-relaxed text-center">
+        Scientific <strong>evidence is only as strong as the methods</strong> behind it. While science is the best way to test whether something is true or false, trustworthy information requires both <strong>rigorous research methods</strong> and <strong>honest, accurate communication</strong> of findings.
+      </p>
+    </div>
+
+    <div class="text-center">
+      <a href="/workflow" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 py-3 font-medium hover:bg-primary/90 transition-colors">
+        See how we review research →
+      </a>
+    </div>
+  </section>
+
+  {/* Join Section */}
+  <section class="mb-8">
+    <div class="text-center mb-12">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
+        Join us and See the <span class="text-accent">Evidence for Yourself</span>
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8 mb-12">
+      <div class="border border-border bg-card rounded-lg p-6 border-l-4 border-l-primary">
+        <h3 class="text-2xl font-semibold text-primary mb-1">Join as a User</h3>
+        <p class="text-muted-foreground mb-4">
+          Access expert reviews and make informed health decisions
+        </p>
+        <ul class="space-y-3 mb-6">
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-primary rounded-full"></span>Browse expert reviews and ratings</li>
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-primary rounded-full"></span>Rate review helpfulness</li>
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-primary rounded-full"></span>Access educational materials and learn how we review science</li>
+        </ul>
+        <a href={appUrl} class="inline-flex items-center justify-center w-full rounded-md bg-primary text-primary-foreground px-4 py-2 font-medium hover:bg-primary/90">
+          Sign Up Now
+        </a>
+      </div>
+
+      <div class="border border-border bg-card rounded-lg p-6 border-l-4 border-l-accent">
+        <h3 class="text-2xl font-semibold text-accent mb-1">Apply as expert or researcher</h3>
+        <p class="text-muted-foreground mb-4">
+          Scientists and healthcare professionals - by invitation only
+        </p>
+        <ul class="space-y-3 mb-6">
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-accent rounded-full"></span>Invitation-based exclusive access</li>
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-accent rounded-full"></span>Data insights</li>
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-accent rounded-full"></span>Participate in community decisions and governance</li>
+        </ul>
+        <a href={appUrl} class="inline-flex items-center justify-center w-full rounded-md border border-accent text-accent px-4 py-2 font-medium hover:bg-accent hover:text-accent-foreground">
+          Request Invitation
+        </a>
+      </div>
+    </div>
   </section>
 </Base>

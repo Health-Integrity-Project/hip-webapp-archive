@@ -1,0 +1,245 @@
+---
+import Base from '../layouts/Base.astro';
+
+const founders = [
+  {
+    name: 'Lorena Pantano',
+    role: 'Founder',
+    bio: 'Leading product strategy and company vision with 10+ years in life science innovation.',
+    avatar_url: '/team/lorena-pantano.jpg',
+  },
+  {
+    name: 'Meeta Mistry',
+    role: 'Founder',
+    bio: 'PhD in Data Science, specializing in data analysis and biology research.',
+    avatar_url: '/team/meeta-mistry.jpg',
+  },
+  {
+    name: 'Judit Flo Gaya',
+    role: 'Founder',
+    bio: 'Cybersecurity expert ensuring the highest standards of data protection and privacy.',
+    avatar_url: '/team/judit-flo.png',
+  },
+  {
+    name: 'Lina Faller',
+    role: 'Founder',
+    bio: 'Full-stack engineer with expertise in scalable health platforms and AI integration.',
+    avatar_url: '/team/lina-faller.jpg',
+  },
+];
+
+const contributors = [
+  {
+    name: 'Viveka Patil',
+    role: 'Contributor',
+    bio: 'MS in Bioinformatics with focus on genomics data analysis; passionate about healthcare access and transparency.',
+    avatar_url: '/team/viveka.png',
+    linkedin_url: 'https://www.linkedin.com/in/viveka-patil-934b3123b/',
+  },
+];
+
+const people = [...founders, ...contributors];
+---
+
+<Base
+  title="About | The Health Integrity Project"
+  description="Learn about The Health Integrity Project: our mission to provide evidence-based insights for women's health, the team behind it, and our cooperative business model."
+  canonicalUrl="/about"
+>
+  {/* Hero Section */}
+  <section class="pt-12 pb-12 overflow-visible">
+    <div class="max-w-5xl mx-auto text-center">
+      <h1 class="text-4xl md:text-5xl font-bold text-foreground mb-4 sm:mb-6 pb-2 leading-[1.15]">
+        About Health Integrity Project
+      </h1>
+      <p class="text-xl text-muted-foreground mb-5 leading-relaxed">
+        Empowering women with evidence-based insights through collaborative research and transparent data analysis.
+      </p>
+    </div>
+  </section>
+
+  {/* Navigation Links */}
+  <section class="pb-12">
+    <div class="max-w-4xl mx-auto">
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="border border-border bg-card rounded-lg p-6 text-center">
+          <svg class="w-12 h-12 mx-auto mb-4 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 0 0-3-3.87M9 20H4v-2a4 4 0 0 1 3-3.87m6-1.13a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm6 0a4 4 0 1 0-3-6.65M9 7a4 4 0 1 0-3 6.65"/>
+          </svg>
+          <h3 class="text-lg font-semibold">Our Team</h3>
+          <p class="text-muted-foreground mb-4 mt-2">
+            Meet the passionate individuals behind our mission
+          </p>
+          <a
+            href="#team"
+            class="inline-flex items-center rounded-md border border-border bg-background px-4 py-2 font-medium hover:bg-secondary/50"
+          >
+            Meet the Team
+          </a>
+        </div>
+
+        <div class="border border-border bg-card rounded-lg p-6 text-center">
+          <svg class="w-12 h-12 mx-auto mb-4 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          <h3 class="text-lg font-semibold">Our Vision</h3>
+          <p class="text-muted-foreground mb-4 mt-2">
+            Discover what drives us and our future goals
+          </p>
+          <a
+            href="#vision"
+            class="inline-flex items-center rounded-md border border-border bg-background px-4 py-2 font-medium hover:bg-secondary/50"
+          >
+            Read Our Vision
+          </a>
+        </div>
+
+        <div class="border border-border bg-card rounded-lg p-6 text-center">
+          <svg class="w-12 h-12 mx-auto mb-4 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/>
+          </svg>
+          <h3 class="text-lg font-semibold">Business Model</h3>
+          <p class="text-muted-foreground mb-4 mt-2">
+            Learn about our cooperative structure and values
+          </p>
+          <a
+            href="#business-model"
+            class="inline-flex items-center rounded-md border border-border bg-background px-4 py-2 font-medium hover:bg-secondary/50"
+          >
+            Learn More
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Team Section */}
+  <section id="team" class="py-12">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold mb-6">Meet Our Team</h2>
+        <div class="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-8"></div>
+        <p class="text-xl text-muted-foreground">
+          Passionate experts dedicated to revolutionizing women's health through data-driven insights and evidence-based research.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {people.map((person) => (
+          <div class="border border-border bg-card rounded-lg p-6">
+            <div class="text-center pb-4">
+              {person.linkedin_url ? (
+                <a href={person.linkedin_url} target="_blank" rel="noopener noreferrer" class="block">
+                  <img src={person.avatar_url} alt={person.name} class="w-24 h-24 mx-auto mb-4 rounded-full object-cover" />
+                  <h3 class="text-xl font-semibold hover:text-primary transition-colors">{person.name}</h3>
+                </a>
+              ) : (
+                <>
+                  <img src={person.avatar_url} alt={person.name} class="w-24 h-24 mx-auto mb-4 rounded-full object-cover" />
+                  <h3 class="text-xl font-semibold">{person.name}</h3>
+                </>
+              )}
+              <span class="inline-flex items-center rounded-md bg-secondary text-secondary-foreground px-2 py-0.5 text-xs font-medium mx-auto mt-2">{person.role}</span>
+            </div>
+            <p class="text-muted-foreground text-center text-sm leading-relaxed">
+              {person.bio}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* Vision Section */}
+  <section id="vision" class="py-12">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold mb-6">Our Vision</h2>
+        <div class="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-8"></div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <h3 class="text-2xl font-semibold mb-6 text-primary">Transforming Research Access</h3>
+          <p class="text-lg text-muted-foreground mb-6 leading-relaxed">
+            We envision a world where every woman has access to reliable, evidence-based information
+            about health, career, and life decisions. Our mission is to bridge the gap between
+            complex research and practical insights.
+          </p>
+          <p class="text-lg text-muted-foreground leading-relaxed">
+            By making research transparent, accessible, and actionable, we empower women to make
+            informed decisions backed by solid evidence rather than myths or assumptions.
+          </p>
+        </div>
+
+        <div class="space-y-6">
+          <div class="border border-border bg-card rounded-lg p-6">
+            <h4 class="font-semibold mb-3 text-primary">Evidence-Based Decisions</h4>
+            <p class="text-muted-foreground">
+              Every claim backed by transparent, peer-reviewed research with clear methodology.
+            </p>
+          </div>
+
+          <div class="border border-border bg-card rounded-lg p-6">
+            <h4 class="font-semibold mb-3 text-primary">Community-Driven</h4>
+            <p class="text-muted-foreground">
+              Built by and for women, ensuring relevant and meaningful insights for our community.
+            </p>
+          </div>
+
+          <div class="border border-border bg-card rounded-lg p-6">
+            <h4 class="font-semibold mb-3 text-primary">Transparent Process</h4>
+            <p class="text-muted-foreground">
+              Open about our sources, methodology, and potential limitations in every analysis.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Business Model Section */}
+  <section id="business-model" class="py-12">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold mb-6">Our Business Model</h2>
+        <div class="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-8"></div>
+        <p class="text-xl text-muted-foreground">
+          A cooperative structure that puts community and contributors first
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-12 mb-12">
+        <div class="border border-border bg-card rounded-lg p-6">
+          <h3 class="text-lg font-semibold text-primary">Cooperative Structure</h3>
+          <p class="text-muted-foreground mb-4 mt-2">
+            HealthIntegrityProject operates as a cooperative where every member has a weighted vote
+            in the company's direction. This ensures that decisions reflect the community's
+            needs and values.
+          </p>
+          <ul class="space-y-2 text-muted-foreground">
+            <li>• Democratic decision-making process</li>
+            <li>• Weighted voting based on contribution level</li>
+            <li>• Transparent governance structure</li>
+            <li>• Community-driven priorities</li>
+          </ul>
+        </div>
+
+        <div class="border border-border bg-card rounded-lg p-6">
+          <h3 class="text-lg font-semibold text-primary">Profit Distribution</h3>
+          <p class="text-muted-foreground mb-4 mt-2">
+            Our profits are reinvested back into the community and product development,
+            ensuring sustainable growth that benefits everyone involved.
+          </p>
+          <ul class="space-y-2 text-muted-foreground">
+            <li>• Returns to contributors and full-time employees</li>
+            <li>• Investment in new product development</li>
+            <li>• Research funding and data acquisition</li>
+            <li>• Platform improvements and accessibility</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

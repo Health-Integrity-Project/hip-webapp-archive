@@ -105,7 +105,8 @@ export function buildBreadcrumbSchema(claimTitle: string, claimUrl: string): Rec
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
-      { '@type': 'ListItem', position: 2, name: claimTitle, item: claimUrl },
+      { '@type': 'ListItem', position: 2, name: 'Health Claims', item: `${SITE_URL}/claims` },
+      { '@type': 'ListItem', position: 3, name: claimTitle, item: claimUrl },
     ],
   };
 }

@@ -1,16 +1,17 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import PublicationList from '../../../components/PublicationList.astro';
-import { getAllClaimSlugs, getClaimEvidence } from '../../../lib/fetchClaimEvidence';
+import { getAllClaimRefs, getClaimEvidence } from '../../../lib/fetchClaimEvidence';
 import { buildOrganizationSchema, buildClaimReviewSchema, buildBreadcrumbSchema, buildPublicationSchema, buildPersonSchema } from '../../../lib/structuredData';
 
 export async function getStaticPaths() {
-  const slugs = await getAllClaimSlugs();
-  return slugs.map((slug) => ({ params: { slug } }));
+  const refs = await getAllClaimRefs();
+  return refs.map((r) => ({ params: { slug: r.slug }, props: { updatedAt: r.updated_at } }));
 }
 
 const { slug } = Astro.params;
-const claim = await getClaimEvidence(slug);
+const { updatedAt } = Astro.props as { updatedAt: string };
+const claim = await getClaimEvidence(slug, updatedAt);
 
 if (!claim) return Astro.redirect('/');
 
@@ -58,7 +59,7 @@ function evidenceBadgeClass(status: string | null): string {
   jsonLd={[orgSchema, claimReviewSchema, breadcrumbSchema, ...publicationSchemas, ...personSchemas]}
 >
   <nav class="text-sm text-gray-500 mb-6">
-    <a href="/" class="hover:text-gray-700 transition-colors">Archive</a>
+    <a href="/claims" class="hover:text-gray-700 transition-colors">Archive</a>
     <span class="mx-2">›</span>
     <span class="text-gray-700">Evidence</span>
   </nav>
