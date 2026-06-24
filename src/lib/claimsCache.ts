@@ -28,6 +28,30 @@ export async function writeCache<T>(slug: string, data: T): Promise<void> {
   await writeFile(cachePath(slug), JSON.stringify(data), 'utf-8');
 }
 
+/** Parse and return every cached claim object, in one disk pass. */
+export async function readAllCached<T>(): Promise<T[]> {
+  if (!CACHE_ENABLED) return [];
+  let files: string[];
+  try {
+    files = await readdir(CACHE_DIR);
+  } catch {
+    return [];
+  }
+  const parsed = await Promise.all(
+    files
+      .filter((f) => f.endsWith('.json'))
+      .map(async (f) => {
+        try {
+          const raw = await readFile(join(CACHE_DIR, f), 'utf-8');
+          return JSON.parse(raw) as T;
+        } catch {
+          return null;
+        }
+      })
+  );
+  return parsed.filter((p): p is T => p !== null);
+}
+
 /** slug -> updated_at for every cached claim, in one disk pass. */
 export async function readCacheIndex(): Promise<Record<string, string>> {
   if (!CACHE_ENABLED) return {};

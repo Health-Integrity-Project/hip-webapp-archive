@@ -1,7 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
+import StatsBanner from '../components/StatsBanner.astro';
+import { getSiteStats } from '../lib/siteStats';
 
 const appUrl = 'https://healthintegrityproject.org';
+const stats = await getSiteStats();
 
 const purposes = [
   {
@@ -112,6 +115,11 @@ const researchSteps = [
       Building trust through transparency. Learn how to evaluate and trust health information
       with confidence through expert-backed scientific insights and community wisdom.
     </p>
+  </section>
+
+  {/* Stats Banner */}
+  <section class="mb-16">
+    <StatsBanner claims={stats.claims} studies={stats.studies} experts={stats.experts} />
   </section>
 
   {/* Purpose Section */}

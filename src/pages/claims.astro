@@ -1,10 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
+import StatsBanner from '../components/StatsBanner.astro';
 import { getAllClaims } from '../lib/fetchClaimEvidence';
+import { getSiteStats } from '../lib/siteStats';
 import type { Claim } from '../lib/types';
 import { buildOrganizationSchema, buildWebSiteSchema } from '../lib/structuredData';
 
 const claims = await getAllClaims();
+const stats = await getSiteStats();
 const orgSchema = buildOrganizationSchema();
 const siteSchema = buildWebSiteSchema();
 
@@ -89,12 +92,12 @@ function formatDate(iso: string): string {
     Expert-reviewed evidence for health claims that matter to you. This is a read-only archive.
   </p>
 
-  {/* Live app CTA */}
-  <div class="mb-10 rounded-2xl bg-gradient-to-r from-primary to-teal-600 p-6 sm:p-8 shadow-lg">
+  {/* Live app CTA + archive stats */}
+  <div class="mb-10 rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-sm">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
-        <h2 class="text-xl sm:text-2xl font-bold text-white">Vote, comment &amp; request expert reviews</h2>
-        <p class="mt-1 text-white/90 max-w-xl">
+        <h2 class="text-xl sm:text-2xl font-bold text-foreground">Vote, comment &amp; request expert reviews</h2>
+        <p class="mt-1 text-muted-foreground max-w-xl">
           The full interactive experience lives in the app. Submit new claims, join the discussion, and follow reviews in real time.
         </p>
       </div>
@@ -102,13 +105,17 @@ function formatDate(iso: string): string {
         href="https://healthintegrityproject.org"
         target="_blank"
         rel="noopener"
-        class="shrink-0 inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-base font-semibold text-primary shadow-md hover:bg-white/90 transition-colors"
+        class="shrink-0 inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow-md hover:bg-primary/90 transition-colors"
       >
         Open Live App
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
         </svg>
       </a>
+    </div>
+
+    <div class="mt-6 pt-6 border-t border-border">
+      <StatsBanner claims={stats.claims} studies={stats.studies} experts={stats.experts} />
     </div>
   </div>
 

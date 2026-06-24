@@ -1,0 +1,30 @@
+---
+interface Props {
+  claims: number;
+  studies: number;
+  experts: number;
+  /** Render light figures for placement on a dark/gradient surface. */
+  onDark?: boolean;
+}
+
+const { claims, studies, experts, onDark = false } = Astro.props;
+const fmt = (n: number) => n.toLocaleString('en-US');
+
+const items = [
+  { value: claims, label: 'Claims' },
+  { value: studies, label: 'Studies' },
+  { value: experts, label: 'Experts' },
+];
+
+const numberColor = onDark ? 'text-white' : 'text-foreground';
+const labelColor = onDark ? 'text-white/70' : 'text-muted-foreground';
+---
+
+<dl class="flex justify-center gap-10 sm:gap-16">
+  {items.map((it) => (
+    <div class="text-center">
+      <dt class={`text-3xl sm:text-4xl font-bold tracking-tight tabular-nums ${numberColor}`}>{fmt(it.value)}</dt>
+      <dd class={`mt-1 text-sm font-normal ${labelColor}`}>{it.label}</dd>
+    </div>
+  ))}
+</dl>
