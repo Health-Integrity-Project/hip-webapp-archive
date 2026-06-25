@@ -1,0 +1,73 @@
+---
+import { marked } from 'marked';
+import Base from '../../layouts/Base.astro';
+import { getAllPosts } from '../../lib/loadPosts';
+import type { InstagramPost } from '../../lib/types';
+
+export function getStaticPaths() {
+  return getAllPosts().map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: InstagramPost;
+}
+
+const { post } = Astro.props;
+
+function badgeColor(status: string): string {
+  const colors: Record<string, string> = {
+    Proved: 'bg-green-500',
+    Disproved: 'bg-red-500',
+    Inconclusive: 'bg-amber-400',
+  };
+  return colors[status] ?? 'bg-gray-600';
+}
+
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+---
+
+<Base
+  title={`${post.claim_title} | Social Posts`}
+  description={post.subtitle}
+  canonicalUrl={`/posts/${post.slug}`}
+  ogType="article"
+>
+  <div class="mb-6">
+    <a href="/posts" class="text-sm text-primary font-medium hover:underline">← All posts</a>
+  </div>
+
+  <article class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+    <div class="rounded-xl border border-border overflow-hidden bg-secondary">
+      <img src={post.image_path} alt={post.claim_title} class="w-full h-auto" />
+    </div>
+
+    <div>
+      <span
+        class={`${badgeColor(post.status_badge)} inline-block text-xs font-semibold uppercase tracking-wide text-white px-2 py-1 rounded`}
+      >
+        {post.status_badge}
+      </span>
+      <h1 class="mt-3 text-2xl font-bold text-foreground">{post.claim_title}</h1>
+      <p class="mt-1 text-sm text-muted-foreground">{formatDate(post.proposed_at)}</p>
+
+      <div class="mt-5 prose prose-sm max-w-none text-foreground" set:html={marked.parse(post.caption)} />
+
+      <a
+        href={post.claim_url}
+        target="_blank"
+        rel="noopener"
+        class="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-md hover:bg-primary/90 transition-colors"
+      >
+        View full evidence
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </a>
+    </div>
+  </article>
+</Base>

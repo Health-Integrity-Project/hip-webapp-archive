@@ -42,3 +42,24 @@ export interface ClaimEvidenceData extends Claim {
   scores: PublicationScore[];
   experts: ExpertProfile[];
 }
+
+/** A weekly Instagram post proposal, persisted as public/posts/<slug>/metadata.json. */
+export interface InstagramPost {
+  /** Directory name under public/posts, e.g. "20260624-astaxanthin-heals-throat-tissue". */
+  slug: string;
+  claim_id: string;
+  claim_title: string;
+  /** Caption body (markdown; may contain **bold**). */
+  caption: string;
+  subtitle: string;
+  /** Mapped badge label: "Supported" | "Disproved" | "Inconclusive". */
+  status_badge: string;
+  /** Underlying evidence_status from the claim. */
+  evidence_status: string;
+  /** Absolute URL to the claim's evidence page. */
+  claim_url: string;
+  /** Public path to the rendered image, e.g. "/posts/<slug>/image.png". */
+  image_path: string;
+  /** ISO timestamp the proposal was generated. */
+  proposed_at: string;
+}

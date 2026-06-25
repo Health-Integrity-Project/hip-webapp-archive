@@ -1,0 +1,71 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getAllPosts } from '../../lib/loadPosts';
+import type { InstagramPost } from '../../lib/types';
+
+const posts = getAllPosts();
+
+function badgeColor(status: string): string {
+  const colors: Record<string, string> = {
+    Proved: 'bg-green-500',
+    Disproved: 'bg-red-500',
+    Inconclusive: 'bg-amber-400',
+  };
+  return colors[status] ?? 'bg-gray-600';
+}
+
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+---
+
+<Base
+  title="Social Posts | The Health Integrity Project"
+  description="Weekly Instagram posts summarizing expert-reviewed health claims from the Health Integrity Project archive."
+  canonicalUrl="/posts"
+  ogType="website"
+>
+  <section>
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold text-foreground">Social Posts</h1>
+      <p class="mt-1 text-muted-foreground max-w-2xl">
+        Weekly visual summaries of reviewed health claims. Each post links back to the full evidence page.
+      </p>
+    </div>
+
+    {posts.length === 0 ? (
+      <p class="rounded-lg border border-border bg-card/50 p-6 text-muted-foreground">
+        No posts yet. Check back soon.
+      </p>
+    ) : (
+      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {posts.map((post: InstagramPost) => (
+          <li>
+            <a
+              href={`/posts/${post.slug}`}
+              class="block rounded-lg border border-border bg-card overflow-hidden hover:shadow-lg transition-shadow"
+            >
+              <div class="relative aspect-[4/5] bg-secondary">
+                <img
+                  src={post.image_path}
+                  alt={post.claim_title}
+                  loading="lazy"
+                  class="w-full h-full object-cover"
+                />
+                <span
+                  class={`${badgeColor(post.status_badge)} absolute top-2 left-2 text-xs font-semibold uppercase tracking-wide text-white px-2 py-0.5 rounded`}
+                >
+                  {post.status_badge}
+                </span>
+              </div>
+              <div class="px-4 py-3">
+                <p class="font-semibold text-foreground line-clamp-2">{post.claim_title}</p>
+                <p class="mt-1 text-xs text-muted-foreground">{formatDate(post.proposed_at)}</p>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</Base>
