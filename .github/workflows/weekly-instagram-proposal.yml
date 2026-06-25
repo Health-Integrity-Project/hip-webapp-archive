@@ -1,0 +1,55 @@
+name: Weekly Instagram Proposal
+
+on:
+  schedule:
+    - cron: '0 12 * * 1' # Monday 12:00 UTC = 7am EST (8am EDT — GitHub cron is UTC, no DST)
+  workflow_dispatch:
+
+permissions:
+  contents: write # to commit the generated image + metadata
+
+# Share the deploy lock with nightly-build so two prod deploys never overlap.
+concurrency:
+  group: deploy-${{ github.ref }}
+
+jobs:
+  propose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm install
+
+      - run: npx tsx scripts/propose-weekly-post.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+
+      - id: commit
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore(posts): add weekly Instagram proposal'
+          file_pattern: 'public/posts/**'
+
+      # Deploy right after committing so the new post image is live before the
+      # reviewer opens Slack (the Slack image_url points at the deployed site).
+      # Runs only when a new post was actually committed.
+      - if: steps.commit.outputs.changes_detected == 'true'
+        run: npm run build
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      - if: steps.commit.outputs.changes_detected == 'true'
+        run: npx netlify-cli deploy --prod --dir=dist --no-build
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

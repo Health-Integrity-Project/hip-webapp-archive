@@ -12,13 +12,16 @@
     "preview": "astro preview"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.106.0",
     "@astrojs/sitemap": "^3.7.2",
+    "@resvg/resvg-js": "^2.6.2",
     "@supabase/supabase-js": "^2.55.0",
     "astro": "^5.7.0",
     "marked": "^18.0.2"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.0",
-    "tailwindcss": "^4.1.0"
+    "tailwindcss": "^4.1.0",
+    "tsx": "^4.22.4"
   }
 }
