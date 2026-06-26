@@ -1,6 +1,6 @@
-# Evidence Decoded Archive
+# Health Integrity Project Archive
 
-Static snapshot site for all health claim evidence pages from [Evidence Decoded](https://healthintegrityproject.org). Rebuilt nightly from Supabase. Deployed to Netlify.
+Static snapshot site for all health claim evidence pages from [Health Integrity Project](https://healthintegrityproject.org). Rebuilt nightly from Supabase. Deployed to Netlify.
 
 ## Stack
 
