@@ -1,0 +1,66 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+---
+
+<Base
+  title="Blog | The Health Integrity Project"
+  description="Articles and updates from the Health Integrity Project on evidence-based health and our review process."
+  canonicalUrl="/blog"
+  ogType="website"
+>
+  <section>
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold text-foreground">Blog</h1>
+      <p class="mt-1 text-muted-foreground max-w-2xl">
+        Articles and updates from the Health Integrity Project.
+      </p>
+    </div>
+
+    {posts.length === 0 ? (
+      <p class="rounded-lg border border-border bg-card/50 p-6 text-muted-foreground">
+        No posts yet. Check back soon.
+      </p>
+    ) : (
+      <ul class="flex flex-col gap-4">
+        {posts.map((post) => (
+          <li>
+            <a
+              href={`/blog/${post.id}`}
+              class="block rounded-lg border border-border bg-card overflow-hidden hover:shadow-lg transition-shadow"
+            >
+              {post.data.cover && (
+                <div class="aspect-[16/9] bg-secondary">
+                  <Image
+                    src={post.data.cover}
+                    alt={post.data.title}
+                    loading="lazy"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <div class="px-5 py-4">
+                <h2 class="text-lg font-semibold text-foreground">{post.data.title}</h2>
+                {post.data.description && (
+                  <p class="mt-1 text-sm text-muted-foreground line-clamp-2">{post.data.description}</p>
+                )}
+                <p class="mt-2 text-xs text-muted-foreground">
+                  {formatDate(post.data.date)}{post.data.author ? ` · ${post.data.author}` : ''}
+                </p>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</Base>
