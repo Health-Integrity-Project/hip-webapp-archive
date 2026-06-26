@@ -3,6 +3,8 @@ export interface SlackProposal {
   statusBadge: string;
   caption: string;
   subtitle: string;
+  /** Hashtag words (no leading #). Rendered as a #tag line under the caption. */
+  tags: string[];
   claimUrl: string;
   /** Rendered post image (PNG) — uploaded to Slack so it's visible immediately. */
   image: Buffer;
@@ -76,6 +78,7 @@ export async function postProposal(p: SlackProposal): Promise<void> {
     '',
     `*Caption:*`,
     p.caption,
+    p.tags.map((t) => `#${t}`).join(' '),
     '',
     `<${p.claimUrl}|View evidence on the site>`,
   ].join('\n');

@@ -61,9 +61,10 @@ async function main() {
   );
 
   // 3. Draft caption (Anthropic). Failure here aborts before any commit/DB write.
-  const { caption, subtitle } = await draftCaption(claim.title, badge, evidence);
+  const { caption, subtitle, tags } = await draftCaption(claim.title, badge, evidence);
   console.log(`Caption: ${caption}`);
   console.log(`Subtitle: ${subtitle}`);
+  console.log(`Tags: ${tags.map((t) => `#${t}`).join(' ')}`);
 
   // 4. Render image.
   const png = renderPostImage({ title: claim.title, statusBadge: badge, subtitle });
@@ -84,6 +85,7 @@ async function main() {
     claim_title: claim.title,
     caption,
     subtitle,
+    tags,
     status_badge: badge,
     evidence_status: claim.evidence_status,
     claim_url: claimUrl,
@@ -111,6 +113,7 @@ async function main() {
     statusBadge: badge,
     caption,
     subtitle,
+    tags,
     claimUrl,
     image: png,
   });

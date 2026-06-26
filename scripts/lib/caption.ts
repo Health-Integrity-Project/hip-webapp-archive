@@ -12,14 +12,20 @@ interface Example {
   comments: string[];
   caption: string;
   subtitle: string;
+  tags: string[];
 }
 
 export interface CaptionResult {
-  /** Caption body, ≤180 chars, markdown with one **bold** key phrase. */
+  /** Caption body for the Instagram post: a few sentences about the study. */
   caption: string;
   /** Short evidence-summary subtitle for the image, ≤80 chars. */
   subtitle: string;
+  /** Three Instagram hashtags (no leading #). "healthintegrity" is always one. */
+  tags: string[];
 }
+
+/** Hashtag included on every post. */
+const REQUIRED_TAG = 'healthintegrity';
 
 const SYSTEM_PROMPT = `You write Instagram captions for the Health Integrity Project, which reviews health claims against peer-reviewed evidence. Expert reviewers score each study and leave comments; you turn that into a short, honest caption.
 
@@ -36,17 +42,25 @@ How to write the "why":
 Voice and rules:
 - Plain, neutral, factual tone. No hype. No emojis. No hashtags.
 - Mirror this brand voice: "The studies reviewed are not focused on tissue healing and the effect is weak."
-- caption: at most 180 characters. Bold exactly one key phrase using markdown **like this**.
+- caption: the Instagram post body, 2-4 sentences. Open by naming the claim and the verdict, then explain what the reviewed studies actually show — the scope, strength, and key limitations drawn from the comments. Bold exactly one key phrase using markdown **like this**. This is the longer text; it can say more about the study than the subtitle.
 - subtitle: at most 80 characters, no markdown. A short summary of the evidence (e.g. the strength or scope of what was reviewed) — not a restatement of the caption. Write it as a complete, grammatical sentence with normal connector words ("is", "are", "the"). Do not use headline/telegraphic style or drop small words to save space — shorten by saying less, not by omitting grammar.
+- tags: exactly three Instagram hashtag words, no leading "#", lowercase, no spaces. The first must always be "${REQUIRED_TAG}". The other two should be topical to the claim (e.g. the condition, treatment, or field).
 - Never overstate certainty. "Supported" = evidence backs it; "Disproved" = evidence contradicts it; "Inconclusive" = evidence is mixed or insufficient.`;
 
 const RESPONSE_SCHEMA = {
   type: 'object',
   properties: {
-    caption: { type: 'string', description: 'Caption body, <=180 chars, one **bold** phrase.' },
+    caption: { type: 'string', description: 'Post body, 2-4 sentences, one **bold** phrase.' },
     subtitle: { type: 'string', description: 'Short evidence-summary subtitle, <=80 chars, no markdown.' },
+    tags: {
+      type: 'array',
+      items: { type: 'string' },
+      minItems: 3,
+      maxItems: 3,
+      description: 'Three hashtag words, no leading #, lowercase. First is "healthintegrity".',
+    },
   },
-  required: ['caption', 'subtitle'],
+  required: ['caption', 'subtitle', 'tags'],
   additionalProperties: false,
 } as const;
 
@@ -78,7 +92,7 @@ function buildFewShot(examples: Example[]): Anthropic.MessageParam[] {
     });
     messages.push({
       role: 'assistant',
-      content: JSON.stringify({ caption: ex.caption, subtitle: ex.subtitle }),
+      content: JSON.stringify({ caption: ex.caption, subtitle: ex.subtitle, tags: ex.tags }),
     });
   }
   return messages;
@@ -120,5 +134,32 @@ export async function draftCaption(
   }
 
   const parsed = JSON.parse(textBlock.text) as CaptionResult;
-  return { caption: parsed.caption.trim(), subtitle: parsed.subtitle.trim() };
+  return {
+    caption: parsed.caption.trim(),
+    subtitle: parsed.subtitle.trim(),
+    tags: normalizeTags(parsed.tags),
+  };
+}
+
+/**
+ * Clean the model's tags: strip leading '#', lowercase, drop spaces/empties and
+ * duplicates, and guarantee `healthintegrity` is present (first) and exactly
+ * three tags are returned.
+ */
+function normalizeTags(raw: string[]): string[] {
+  const clean = (Array.isArray(raw) ? raw : [])
+    .map((t) => String(t).trim().replace(/^#/, '').replace(/\s+/g, '').toLowerCase())
+    .filter(Boolean);
+
+  const seen = new Set<string>();
+  const tags = [REQUIRED_TAG];
+  seen.add(REQUIRED_TAG);
+  for (const t of clean) {
+    if (tags.length >= 3) break;
+    if (!seen.has(t)) {
+      seen.add(t);
+      tags.push(t);
+    }
+  }
+  return tags.slice(0, 3);
 }

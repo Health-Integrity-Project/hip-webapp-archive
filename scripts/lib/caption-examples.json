@@ -6,8 +6,9 @@
     "comments": [
       "This large US cohort study found that women diagnosed with uterine fibroids were about 2.5 times more likely to develop atherosclerotic cardiovascular disease. The association held after adjusting for common risk factors."
     ],
-    "caption": "**Fibroids and heart disease.** One large US study found women with fibroids were about 2.5x more likely to develop cardiovascular disease.",
-    "subtitle": "This is based on one large cohort study, well adjusted for other factors to isolate the effect."
+    "caption": "**Fibroids and heart disease.** One large US cohort study found women diagnosed with uterine fibroids were about 2.5x more likely to develop atherosclerotic cardiovascular disease. The link held after adjusting for common risk factors, so it isn't just explained by shared causes — but it's still a single study.",
+    "subtitle": "This is based on one large cohort study, well adjusted for other factors to isolate the effect.",
+    "tags": ["healthintegrity", "uterinefibroids", "hearthealth"]
   },
   {
     "claim_title": "Astaxanthin heals damaged throat tissue",
@@ -17,8 +18,9 @@
       "The studies reviewed are not focused on throat tissue healing. They look at skin and eye outcomes, and the effect size is weak.",
       "No direct evidence that astaxanthin repairs throat tissue. The mechanism is plausible but untested in this context."
     ],
-    "caption": "**Astaxanthin and throat healing.** The reviewed studies don't measure throat tissue, and the effect they do show is weak. Evidence does not support this.",
-    "subtitle": "None of the reviewed studies measured throat-tissue repair."
+    "caption": "**Astaxanthin and throat healing.** None of the reviewed studies actually measure throat tissue — they look at skin and eye outcomes, and the effect there is weak. The repair mechanism is plausible but untested in this context, so the evidence does not support the claim.",
+    "subtitle": "None of the reviewed studies measured throat-tissue repair.",
+    "tags": ["healthintegrity", "astaxanthin", "supplements"]
   },
   {
     "claim_title": "Cold showers after a workout reduce inflammation and speed muscle recovery",
@@ -29,7 +31,8 @@
       "Results are mixed across the studies; some show benefit, others show no difference from passive rest.",
       "Short follow-up periods make it hard to judge real recovery, as opposed to a temporary numbing effect."
     ],
-    "caption": "**Cold showers and recovery.** The reviewed trials are small and mixed, with short follow-up — some report less soreness, others no benefit. The evidence isn't conclusive.",
-    "subtitle": "The four reviewed trials were small, short, and gave mixed results."
+    "caption": "**Cold showers and recovery.** The four reviewed trials are small — one had fewer than 30 people and no control group — with short follow-up and mixed results. Some report less soreness, others no benefit over passive rest, and short follow-up makes it hard to tell real recovery from a temporary numbing effect. The evidence isn't conclusive.",
+    "subtitle": "The four reviewed trials were small, short, and gave mixed results.",
+    "tags": ["healthintegrity", "musclerecovery", "coldtherapy"]
   }
 ]
