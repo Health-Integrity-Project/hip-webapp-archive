@@ -1,0 +1,28 @@
+name: Weekly Experts Digest
+
+on:
+  schedule:
+    - cron: '0 14 * * 2' # Tuesday 14:00 UTC = 9am EST (10am EDT — GitHub cron is UTC, no DST)
+  workflow_dispatch:
+
+# Read-only digest: no commits, no deploy. No special permissions needed.
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm install
+
+      - run: npx tsx scripts/propose-expert-work.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_EXPERTS_CHANNEL_ID: ${{ secrets.SLACK_EXPERTS_CHANNEL_ID }}

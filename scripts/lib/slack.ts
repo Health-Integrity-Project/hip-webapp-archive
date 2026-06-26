@@ -97,3 +97,14 @@ export async function postInfo(text: string): Promise<void> {
     text,
   });
 }
+
+/**
+ * Post a plain text message to an explicit channel id (mrkdwn). Used by the
+ * weekly experts digest, which targets a different channel than the IG proposer.
+ */
+export async function postMessage(channel: string, text: string): Promise<void> {
+  await slackPostForm('chat.postMessage', {
+    channel,
+    text,
+  });
+}
