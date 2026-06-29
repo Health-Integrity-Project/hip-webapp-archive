@@ -55,9 +55,9 @@ const RESPONSE_SCHEMA = {
     tags: {
       type: 'array',
       items: { type: 'string' },
-      minItems: 3,
-      maxItems: 3,
-      description: 'Three hashtag words, no leading #, lowercase. First is "healthintegrity".',
+      // Anthropic structured output rejects array minItems/maxItems other than
+      // 0 or 1. Count is enforced by the prompt + normalizeTags() instead.
+      description: 'Exactly three hashtag words, no leading #, lowercase. First is "healthintegrity".',
     },
   },
   required: ['caption', 'subtitle', 'tags'],
