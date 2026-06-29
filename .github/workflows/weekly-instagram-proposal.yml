@@ -2,7 +2,7 @@ name: Weekly Instagram Proposal
 
 on:
   schedule:
-    - cron: '0 12 * * 1' # Monday 12:00 UTC = 7am EST (8am EDT — GitHub cron is UTC, no DST)
+    - cron: '17 12 * * 1' # Monday 12:17 UTC (~7am EST). Off-the-hour to dodge GitHub's top-of-hour scheduler load (on-the-hour crons get delayed/dropped)
   workflow_dispatch:
 
 permissions:
