@@ -6,7 +6,9 @@ import { getSiteStats } from '../lib/siteStats';
 import type { Claim } from '../lib/types';
 import { buildOrganizationSchema, buildWebSiteSchema } from '../lib/structuredData';
 
-const claims = await getAllClaims();
+const REVIEWED_STATUSES = new Set(['Evidence Supports', 'Evidence Disproves', 'Inconclusive']);
+const allClaims = await getAllClaims();
+const claims = allClaims.filter((c) => c.evidence_status && REVIEWED_STATUSES.has(c.evidence_status));
 const stats = await getSiteStats();
 const orgSchema = buildOrganizationSchema();
 const siteSchema = buildWebSiteSchema();

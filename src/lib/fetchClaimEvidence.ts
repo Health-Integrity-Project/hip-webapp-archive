@@ -38,10 +38,10 @@ export async function getAllClaims(): Promise<import('./types').Claim[]> {
 }
 
 /** Lightweight freshness probe: one query, slug + updated_at for every claim. */
-export async function getAllClaimRefs(): Promise<{ slug: string; updated_at: string }[]> {
+export async function getAllClaimRefs(): Promise<{ slug: string; updated_at: string; evidence_status: string | null }[]> {
   const { data, error } = await supabase
     .from('claims')
-    .select('slug, updated_at')
+    .select('slug, updated_at, evidence_status')
     .order('updated_at', { ascending: false });
 
   if (error) throw new Error(`Failed to fetch claim refs: ${error.message}`);

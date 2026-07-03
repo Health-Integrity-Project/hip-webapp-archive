@@ -18,7 +18,7 @@ export interface Publication {
   publication_year: number | null;
   url: string | null;
   doi: string | null;
-  stance: 'supporting' | 'contradicting' | 'neutral' | 'mixed' | null;
+  stance: 'supporting' | 'contradicting' | null;
 }
 
 export interface PublicationScore {

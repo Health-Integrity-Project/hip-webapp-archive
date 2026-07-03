@@ -4,9 +4,13 @@ import PublicationList from '../../../components/PublicationList.astro';
 import { getAllClaimRefs, getClaimEvidence } from '../../../lib/fetchClaimEvidence';
 import { buildOrganizationSchema, buildClaimReviewSchema, buildBreadcrumbSchema, buildPublicationSchema, buildPersonSchema } from '../../../lib/structuredData';
 
+const REVIEWED_STATUSES = new Set(['Evidence Supports', 'Evidence Disproves', 'Inconclusive']);
+
 export async function getStaticPaths() {
   const refs = await getAllClaimRefs();
-  return refs.map((r) => ({ params: { slug: r.slug }, props: { updatedAt: r.updated_at } }));
+  return refs
+    .filter((r) => r.evidence_status && REVIEWED_STATUSES.has(r.evidence_status))
+    .map((r) => ({ params: { slug: r.slug }, props: { updatedAt: r.updated_at } }));
 }
 
 const { slug } = Astro.params;
@@ -35,11 +39,11 @@ const descriptionBase = claim.description
   : claim.title;
 const pageDescription = `${statusText}: ${descriptionBase}. Backed by ${pubCount} scientific publication${pubCount !== 1 ? 's' : ''} reviewed by health experts.`;
 
+// Stance is only ever 'supporting' or 'contradicting', and only after review.
 const supporting = claim.publications.filter((p) => p.stance === 'supporting');
 const contradicting = claim.publications.filter((p) => p.stance === 'contradicting');
-const neutral = claim.publications.filter(
-  (p) => p.stance === 'neutral' || p.stance === 'mixed' || !p.stance
-);
+// Papers without an assigned stance are awaiting expert review.
+const awaiting = claim.publications.filter((p) => !p.stance);
 
 function evidenceBadgeClass(status: string | null): string {
   switch (status) {
@@ -116,14 +120,14 @@ function evidenceBadgeClass(status: string | null): string {
           sectionId="contradicting-content"
         />
       )}
-      {neutral.length > 0 && (
+      {awaiting.length > 0 && (
         <PublicationList
-          publications={neutral}
+          publications={awaiting}
           scores={claim.scores}
           experts={claim.experts}
           stanceColor="gray"
-          label="Neutral / Mixed"
-          sectionId="neutral-content"
+          label="Awaiting Review"
+          sectionId="awaiting-content"
         />
       )}
     </div>
