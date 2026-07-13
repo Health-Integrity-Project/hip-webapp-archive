@@ -4,9 +4,10 @@ import PublicationList from '../../../components/PublicationList.astro';
 import { getAllClaimRefs, getClaimEvidence } from '../../../lib/fetchClaimEvidence';
 import { buildOrganizationSchema, buildClaimReviewSchema, buildBreadcrumbSchema, buildPublicationSchema, buildPersonSchema } from '../../../lib/structuredData';
 
-const REVIEWED_STATUSES = new Set(['Evidence Supports', 'Evidence Disproves', 'Inconclusive']);
-
 export async function getStaticPaths() {
+  // Defined inside because Astro hoists getStaticPaths out of the frontmatter
+  // scope — it cannot reference frontmatter variables declared outside it.
+  const REVIEWED_STATUSES = new Set(['Evidence Supports', 'Evidence Disproves', 'Inconclusive']);
   const refs = await getAllClaimRefs();
   return refs
     .filter((r) => r.evidence_status && REVIEWED_STATUSES.has(r.evidence_status))
