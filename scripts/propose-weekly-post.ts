@@ -61,13 +61,16 @@ async function main() {
   );
 
   // 3. Draft caption (Anthropic). Failure here aborts before any commit/DB write.
-  const { caption, subtitle, tags } = await draftCaption(claim.title, badge, evidence);
+  // `title` is the claim title with grammar/spelling fixed (if needed); it is
+  // what we display everywhere, while claim.title stays untouched in the DB.
+  const { title, caption, subtitle, tags } = await draftCaption(claim.title, badge, evidence);
+  if (title !== claim.title) console.log(`Title corrected: ${title}`);
   console.log(`Caption: ${caption}`);
   console.log(`Subtitle: ${subtitle}`);
   console.log(`Tags: ${tags.map((t) => `#${t}`).join(' ')}`);
 
   // 4. Render image.
-  const png = renderPostImage({ title: claim.title, statusBadge: badge, subtitle });
+  const png = renderPostImage({ title, statusBadge: badge, subtitle });
 
   // 5. Write image + metadata into the repo.
   const dateStr = yyyymmdd(new Date());
@@ -82,7 +85,7 @@ async function main() {
   const metadata = {
     slug,
     claim_id: claim.id,
-    claim_title: claim.title,
+    claim_title: title,
     caption,
     subtitle,
     tags,
@@ -109,7 +112,7 @@ async function main() {
   // 7. Slack: upload the rendered PNG with the proposal text as the message
   // body. The image is visible immediately — no dependency on the deploy.
   await postProposal({
-    claimTitle: claim.title,
+    claimTitle: title,
     statusBadge: badge,
     caption,
     subtitle,

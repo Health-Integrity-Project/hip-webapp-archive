@@ -16,6 +16,8 @@ interface Example {
 }
 
 export interface CaptionResult {
+  /** Claim title with grammar/spelling fixed; original wording otherwise. */
+  title: string;
   /** Caption body for the Instagram post: a few sentences about the study. */
   caption: string;
   /** Short evidence-summary subtitle for the image, ≤80 chars. */
@@ -41,6 +43,7 @@ How to write the "why":
 
 Voice and rules:
 - Plain, neutral, factual tone. No hype. No emojis. No hashtags.
+- title: the claim title, corrected only for grammar, spelling, and capitalization. Do not reword, shorten, or change the claim's meaning; if the title is already correct, return it unchanged.
 - Mirror this brand voice: "The studies reviewed are not focused on tissue healing and the effect is weak."
 - caption: the Instagram post body, 2-4 sentences. Open by naming the claim and the verdict, then explain what the reviewed studies actually show — the scope, strength, and key limitations drawn from the comments. Bold exactly one key phrase using markdown **like this**. This is the longer text; it can say more about the study than the subtitle.
 - subtitle: at most 80 characters, no markdown. A short summary of the evidence (e.g. the strength or scope of what was reviewed) — not a restatement of the caption. Write it as a complete, grammatical sentence with normal connector words ("is", "are", "the"). Do not use headline/telegraphic style or drop small words to save space — shorten by saying less, not by omitting grammar.
@@ -50,6 +53,10 @@ Voice and rules:
 const RESPONSE_SCHEMA = {
   type: 'object',
   properties: {
+    title: {
+      type: 'string',
+      description: 'Claim title with grammar/spelling fixed only; unchanged if already correct.',
+    },
     caption: { type: 'string', description: 'Post body, 2-4 sentences, one **bold** phrase.' },
     subtitle: { type: 'string', description: 'Short evidence-summary subtitle, <=80 chars, no markdown.' },
     tags: {
@@ -60,7 +67,7 @@ const RESPONSE_SCHEMA = {
       description: 'Exactly three hashtag words, no leading #, lowercase. First is "healthintegrity".',
     },
   },
-  required: ['caption', 'subtitle', 'tags'],
+  required: ['title', 'caption', 'subtitle', 'tags'],
   additionalProperties: false,
 } as const;
 
@@ -92,7 +99,12 @@ function buildFewShot(examples: Example[]): Anthropic.MessageParam[] {
     });
     messages.push({
       role: 'assistant',
-      content: JSON.stringify({ caption: ex.caption, subtitle: ex.subtitle, tags: ex.tags }),
+      content: JSON.stringify({
+        title: ex.claim_title,
+        caption: ex.caption,
+        subtitle: ex.subtitle,
+        tags: ex.tags,
+      }),
     });
   }
   return messages;
@@ -135,6 +147,8 @@ export async function draftCaption(
 
   const parsed = JSON.parse(textBlock.text) as CaptionResult;
   return {
+    // Fall back to the original title if the model returns an empty one.
+    title: (parsed.title ?? '').trim() || claimTitle,
     caption: parsed.caption.trim(),
     subtitle: parsed.subtitle.trim(),
     tags: normalizeTags(parsed.tags),
