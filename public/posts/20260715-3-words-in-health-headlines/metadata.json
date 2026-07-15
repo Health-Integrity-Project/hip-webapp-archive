@@ -1,0 +1,23 @@
+{
+  "slug": "20260715-3-words-in-health-headlines",
+  "type": "carousel",
+  "title": "3 words in health headlines — and what they actually mean",
+  "caption_file": "caption.txt",
+  "tags": [
+    "HealthLiteracy",
+    "MedicalStatistics",
+    "ScienceCommunication",
+    "PublicHealth",
+    "CriticalThinking"
+  ],
+  "slides": [
+    "/posts/20260715-3-words-in-health-headlines/slide-1-cover.png",
+    "/posts/20260715-3-words-in-health-headlines/slide-2-linked.png",
+    "/posts/20260715-3-words-in-health-headlines/slide-3-risk.png",
+    "/posts/20260715-3-words-in-health-headlines/slide-4-causes.png",
+    "/posts/20260715-3-words-in-health-headlines/slide-5-closing.png"
+  ],
+  "video": "/posts/20260715-3-words-in-health-headlines/reel.mp4",
+  "proposed_at": "2026-07-15T00:00:00.000Z",
+  "source": "manual (scripts/render-definitions-carousel.ts)"
+}
