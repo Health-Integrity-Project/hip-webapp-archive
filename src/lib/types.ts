@@ -43,23 +43,43 @@ export interface ClaimEvidenceData extends Claim {
   experts: ExpertProfile[];
 }
 
-/** A weekly Instagram post proposal, persisted as public/posts/<slug>/metadata.json. */
+/**
+ * A social post persisted as public/posts/<slug>/metadata.json.
+ *
+ * Two shapes share this type:
+ * - Weekly claim posts (the pipeline): single image + claim fields
+ *   (claim_id, claim_title, status_badge, claim_url, image_path).
+ * - Manual posts: `title`, and either a single image or a carousel
+ *   (`slides`), optionally with a rendered `video` (reel). Their caption may
+ *   live in a separate file referenced by `caption_file`.
+ */
 export interface InstagramPost {
   /** Directory name under public/posts, e.g. "20260624-astaxanthin-heals-throat-tissue". */
   slug: string;
-  claim_id: string;
-  claim_title: string;
+  /** "single" (default; weekly claim post) or "carousel". */
+  type?: 'single' | 'carousel';
+  /** Post title for manual posts; weekly posts use claim_title. */
+  title?: string;
+  claim_id?: string;
+  claim_title?: string;
   /** Caption body (markdown; may contain **bold**). */
-  caption: string;
-  subtitle: string;
+  caption?: string;
+  /** File name inside the post directory holding the caption (e.g. "caption.txt"). */
+  caption_file?: string;
+  subtitle?: string;
+  tags?: string[];
   /** Mapped badge label: "Supported" | "Disproved" | "Inconclusive". */
-  status_badge: string;
+  status_badge?: string;
   /** Underlying evidence_status from the claim. */
-  evidence_status: string;
+  evidence_status?: string;
   /** Absolute URL to the claim's evidence page. */
-  claim_url: string;
+  claim_url?: string;
   /** Public path to the rendered image, e.g. "/posts/<slug>/image.png". */
-  image_path: string;
+  image_path?: string;
+  /** Carousel slide public paths, in display order. */
+  slides?: string[];
+  /** Public path to a rendered video/reel, e.g. "/posts/<slug>/reel.mp4". */
+  video?: string;
   /** ISO timestamp the proposal was generated. */
   proposed_at: string;
 }

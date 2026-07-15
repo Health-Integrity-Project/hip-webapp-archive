@@ -23,6 +23,11 @@ export function getAllPosts(): InstagramPost[] {
 
     try {
       const meta = JSON.parse(readFileSync(metaPath, 'utf8')) as InstagramPost;
+      // Manual posts keep their caption in a sibling file (e.g. caption.txt).
+      if (!meta.caption && meta.caption_file) {
+        const captionPath = join(dir, meta.caption_file);
+        if (existsSync(captionPath)) meta.caption = readFileSync(captionPath, 'utf8').trim();
+      }
       // Fall back to the directory name if slug is missing.
       posts.push({ ...meta, slug: meta.slug ?? entry });
     } catch (err) {

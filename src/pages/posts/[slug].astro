@@ -17,6 +17,10 @@ interface Props {
 
 const { post } = Astro.props;
 
+const title = post.claim_title ?? post.title ?? post.slug;
+// Weekly posts have one image; manual carousels list their slides.
+const images = post.slides ?? (post.image_path ? [post.image_path] : []);
+
 function badgeColor(status: string): string {
   const colors: Record<string, string> = {
     Proved: 'bg-green-500',
@@ -32,8 +36,8 @@ function formatDate(iso: string): string {
 ---
 
 <Base
-  title={`${post.claim_title} | Social Posts`}
-  description={post.subtitle}
+  title={`${title} | Social Posts`}
+  description={post.subtitle ?? title}
   canonicalUrl={`/posts/${post.slug}`}
   ogType="article"
 >
@@ -42,32 +46,51 @@ function formatDate(iso: string): string {
   </div>
 
   <article class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-    <div class="rounded-xl border border-border overflow-hidden bg-secondary">
-      <img src={post.image_path} alt={post.claim_title} class="w-full h-auto" />
+    <div class="space-y-4">
+      {images.map((src) => (
+        <div class="rounded-xl border border-border overflow-hidden bg-secondary">
+          <img src={src} alt={title} class="w-full h-auto" />
+        </div>
+      ))}
+      {post.video && (
+        <div>
+          <p class="mb-2 text-sm font-medium text-muted-foreground">Watch as reel</p>
+          <video
+            controls
+            preload="metadata"
+            class="w-full rounded-xl border border-border bg-secondary"
+            src={post.video}
+          />
+        </div>
+      )}
     </div>
 
     <div>
-      <span
-        class={`${badgeColor(post.status_badge)} inline-block text-xs font-semibold uppercase tracking-wide text-white px-2 py-1 rounded`}
-      >
-        {post.status_badge}
-      </span>
-      <h1 class="mt-3 text-2xl font-bold text-foreground">{post.claim_title}</h1>
+      {post.status_badge && (
+        <span
+          class={`${badgeColor(post.status_badge)} inline-block text-xs font-semibold uppercase tracking-wide text-white px-2 py-1 rounded`}
+        >
+          {post.status_badge}
+        </span>
+      )}
+      <h1 class="mt-3 text-2xl font-bold text-foreground">{title}</h1>
       <p class="mt-1 text-sm text-muted-foreground">{formatDate(post.proposed_at)}</p>
 
-      <div class="mt-5 prose prose-sm max-w-none text-foreground" set:html={marked.parse(post.caption)} />
+      <div class="mt-5 prose prose-sm max-w-none text-foreground" set:html={marked.parse(post.caption ?? '')} />
 
-      <a
-        href={post.claim_url}
-        target="_blank"
-        rel="noopener"
-        class="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-md hover:bg-primary/90 transition-colors"
-      >
-        View full evidence
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-        </svg>
-      </a>
+      {post.claim_url && (
+        <a
+          href={post.claim_url}
+          target="_blank"
+          rel="noopener"
+          class="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-md hover:bg-primary/90 transition-colors"
+        >
+          View full evidence
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      )}
     </div>
   </article>
 </Base>

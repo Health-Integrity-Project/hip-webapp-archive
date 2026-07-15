@@ -47,19 +47,33 @@ function formatDate(iso: string): string {
             >
               <div class="relative aspect-[4/5] bg-secondary">
                 <img
-                  src={post.image_path}
-                  alt={post.claim_title}
+                  src={post.image_path ?? post.slides?.[0]}
+                  alt={post.claim_title ?? post.title ?? post.slug}
                   loading="lazy"
                   class="w-full h-full object-cover"
                 />
-                <span
-                  class={`${badgeColor(post.status_badge)} absolute top-2 left-2 text-xs font-semibold uppercase tracking-wide text-white px-2 py-0.5 rounded`}
-                >
-                  {post.status_badge}
-                </span>
+                {post.status_badge && (
+                  <span
+                    class={`${badgeColor(post.status_badge)} absolute top-2 left-2 text-xs font-semibold uppercase tracking-wide text-white px-2 py-0.5 rounded`}
+                  >
+                    {post.status_badge}
+                  </span>
+                )}
+                {post.slides && post.slides.length > 1 && (
+                  <span class="absolute top-2 right-2 rounded bg-black/60 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-white">
+                    {post.slides.length} slides
+                  </span>
+                )}
+                {post.video && (
+                  <span class="absolute bottom-2 right-2 rounded bg-black/60 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-white">
+                    ▶ Reel
+                  </span>
+                )}
               </div>
               <div class="px-4 py-3">
-                <p class="font-semibold text-foreground line-clamp-2">{post.claim_title}</p>
+                <p class="font-semibold text-foreground line-clamp-2">
+                  {post.claim_title ?? post.title ?? post.slug}
+                </p>
                 <p class="mt-1 text-xs text-muted-foreground">{formatDate(post.proposed_at)}</p>
               </div>
             </a>
