@@ -18,7 +18,10 @@ import {
 } from './lib/pickExpertWork';
 import { postMessage } from './lib/slack';
 
-export const SITE_BASE = 'https://open.healthintegrityproject.org';
+// Must be the live app, not the static archive (open.healthintegrityproject.org) —
+// the archive only pre-builds pages for already-reviewed claims, so links to
+// claims/papers still awaiting papers or review would 404 there.
+export const SITE_BASE = 'https://healthintegrityproject.org';
 export const CLAIMS_TO_PICK = 2;
 export const PAPERS_TO_PICK = 2;
 
