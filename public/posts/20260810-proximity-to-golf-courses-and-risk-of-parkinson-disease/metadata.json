@@ -1,0 +1,17 @@
+{
+  "slug": "20260810-proximity-to-golf-courses-and-risk-of-parkinson-disease",
+  "claim_id": "0eaa4e9a-6aa5-4dc5-bdab-35603df88c32",
+  "claim_title": "Proximity to Golf Courses and Risk of Parkinson Disease",
+  "caption": "**Living near golf courses and Parkinson's.** One observational study in southern Minnesota and western Wisconsin found people living near golf courses — especially those whose tap water came from local groundwater — had roughly **double the odds of Parkinson's disease**. But this is a single study that shows a statistical link, not proof: no pesticides were actually measured, cases were far more urban than controls, and several distance results don't survive correction for multiple comparisons. Treat it as an early signal rather than a settled finding.",
+  "subtitle": "One observational study links proximity, but exposure was never directly measured.",
+  "tags": [
+    "healthintegrity",
+    "parkinsons",
+    "pesticides"
+  ],
+  "status_badge": "Supported",
+  "evidence_status": "Evidence Supports",
+  "claim_url": "https://open.healthintegrityproject.org/claims/proximity-to-golf-courses-and-risk-of-parkinson-disease/evidence",
+  "image_path": "/posts/20260810-proximity-to-golf-courses-and-risk-of-parkinson-disease/image.png",
+  "proposed_at": "2026-08-10T13:45:11.463Z"
+}
