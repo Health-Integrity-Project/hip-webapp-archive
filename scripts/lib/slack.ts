@@ -106,5 +106,7 @@ export async function postMessage(channel: string, text: string): Promise<void> 
   await slackPostForm('chat.postMessage', {
     channel,
     text,
+    unfurl_links: 'false',
+    unfurl_media: 'false',
   });
 }
